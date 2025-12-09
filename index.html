@@ -1,450 +1,410 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Computabilis - Sistema profissional de gestão financeira">
     <meta name="theme-color" content="#8b5cf6">
     <title>Computabilis - Sistema Profissional</title>
-
-    <!-- PWA -->
+    
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Computabilis">
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-
-    <!-- Babel Standalone -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <!-- Recharts -->
-    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
-
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+    
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-
-        #root {
-            min-height: 100vh;
-        }
-
-        /* Scrollbar customizada */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.5);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(139, 92, 246, 0.8);
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, sans-serif; transition: background 0.3s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+        .card { background: rgba(0,0,0,0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; padding: 1.5rem; margin-bottom: 1rem; }
+        .card-light { background: rgba(255,255,255,0.8); border: 1px solid rgba(139,92,246,0.2); }
+        .bg-dark { background: linear-gradient(135deg, #1e1b4b 0%, #581c87 50%, #1e1b4b 100%); color: white; min-height: 100vh; }
+        .bg-light { background: linear-gradient(135deg, #faf5ff 0%, #fce7f3 50%, #dbeafe 100%); color: #1f2937; min-height: 100vh; }
+        .grid { display: grid; gap: 1rem; }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: transform 0.2s; font-size: 1rem; }
+        .btn:hover { transform: scale(1.05); }
+        .btn-primary { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; }
+        .btn-green { background: #10b981; color: white; }
+        .btn-red { background: #ef4444; color: white; }
+        .btn-blue { background: #3b82f6; color: white; }
+        input, select { padding: 0.75rem; border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.2); background: #000; color: #fff; width: 100%; font-size: 1rem; }
+        .input-light { background: #fff; color: #000; border: 1px solid #d1d5db; }
+        .text-green { color: #10b981; }
+        .text-red { color: #ef4444; }
+        .text-blue { color: #3b82f6; }
+        .text-purple { color: #8b5cf6; }
+        .text-yellow { color: #f59e0b; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .logo { display: flex; align-items: center; gap: 1rem; }
+        .emoji { width: 48px; height: 48px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .table-light th, .table-light td { border-bottom: 1px solid rgba(0,0,0,0.1); }
+        th { font-weight: 600; opacity: 0.7; font-size: 0.875rem; }
+        .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; }
+        .badge-green { background: rgba(16,185,129,0.2); color: #10b981; }
+        .badge-red { background: rgba(239,68,68,0.2); color: #ef4444; }
+        .clickable { cursor: pointer; transition: transform 0.2s; }
+        .clickable:hover { transform: scale(1.05); }
+        .hidden { display: none; }
+        @media (max-width: 768px) {
+            .grid-3, .grid-2 { grid-template-columns: 1fr; }
+            input, select, .btn { font-size: 16px; }
         }
     </style>
 </head>
+<body id="body" class="bg-dark">
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="emoji">💰</div>
+                <div>
+                    <h1 style="font-size: 2rem; font-weight: bold;" id="title">Computabilis</h1>
+                    <p style="font-size: 0.875rem; opacity: 0.7;" id="subtitle">Sistema profissional</p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+                <select id="lang" style="width: auto; padding: 0.5rem;">
+                    <option value="pt-br">🇧🇷 PT</option>
+                    <option value="en">🇺🇸 EN</option>
+                    <option value="es">🇪🇸 ES</option>
+                </select>
+                <button id="theme-btn" class="btn btn-primary">☀️</button>
+            </div>
+        </div>
 
-<body>
-    <div id="root"></div>
+        <!-- Cards Resumo -->
+        <div class="grid grid-3">
+            <div class="card" id="card-income">
+                <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;">📈 <span id="txt-income">Receitas</span></div>
+                <div class="text-green" style="font-size: 2rem; font-weight: bold;" id="val-income">$ 0.00</div>
+            </div>
+            <div class="card" id="card-expense">
+                <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;">📉 <span id="txt-expense">Despesas</span></div>
+                <div class="text-red" style="font-size: 2rem; font-weight: bold;" id="val-expense">$ 0.00</div>
+            </div>
+            <div class="card" id="card-balance">
+                <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;">💰 <span id="txt-balance">Saldo</span></div>
+                <div class="text-blue" style="font-size: 2rem; font-weight: bold;" id="val-balance">$ 0.00</div>
+            </div>
+        </div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
-        const { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } = Recharts;
+        <!-- Meta e Patrimônio -->
+        <div class="grid grid-2">
+            <div class="card clickable" id="card-goal">
+                <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;" id="txt-goal">Meta Mensal (clique)</div>
+                <input type="number" id="input-goal" class="hidden" style="font-size: 1.5rem; font-weight: bold;">
+                <div class="text-purple" style="font-size: 1.5rem; font-weight: bold;" id="val-goal">$ 3000.00</div>
+            </div>
+            <div class="card clickable" id="card-equity">
+                <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;" id="txt-equity">Patrimônio (clique)</div>
+                <input type="number" id="input-equity" class="hidden" style="font-size: 1.5rem; font-weight: bold;">
+                <div class="text-yellow" style="font-size: 1.5rem; font-weight: bold;" id="val-equity">$ 0.00</div>
+            </div>
+        </div>
 
-        // Componentes dos ícones Lucide
-        const DollarSign = () => <i data-lucide="dollar-sign"></i>;
-        const TrendingUp = () => <i data-lucide="trending-up"></i>;
-        const TrendingDown = () => <i data-lucide="trending-down"></i>;
-        const Plus = () => <i data-lucide="plus"></i>;
-        const Download = () => <i data-lucide="download"></i>;
-        const Upload = () => <i data-lucide="upload"></i>;
-        const FileText = () => <i data-lucide="file-text"></i>;
-        const Sun = () => <i data-lucide="sun"></i>;
-        const Moon = () => <i data-lucide="moon"></i>;
-        const Trash2 = () => <i data-lucide="trash-2"></i>;
-        const BarChart3 = () => <i data-lucide="bar-chart-3"></i>;
+        <!-- Estatísticas -->
+        <div class="card">
+            <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">📊 <span id="txt-stats">Estatísticas</span></h2>
+            <div class="grid grid-3">
+                <div>
+                    <div style="font-size: 0.875rem; opacity: 0.7;" id="txt-freq">Categoria + Frequente</div>
+                    <div style="font-weight: bold;" id="val-freq">N/A</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.875rem; opacity: 0.7;" id="txt-avg">Ticket Médio</div>
+                    <div style="font-weight: bold;" id="val-avg">$ 0.00</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.875rem; opacity: 0.7;" id="txt-total">Total</div>
+                    <div style="font-weight: bold;" id="val-total">0</div>
+                </div>
+            </div>
+        </div>
 
-        // Cole aqui o código do componente Computabilis (todo o código do artifact)
-        // SUBSTITUA ESTA LINHA PELO CÓDIGO COMPLETO DO APP
+        <!-- Formulário -->
+        <div class="card">
+            <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">➕ <span id="txt-add">Adicionar</span></h2>
+            <div class="grid grid-2">
+                <input type="date" id="form-date">
+                <select id="form-type">
+                    <option value="despesa">Despesa</option>
+                    <option value="receita">Receita</option>
+                </select>
+                <select id="form-category"></select>
+                <input type="number" step="0.01" id="form-value" placeholder="Valor">
+                <input type="text" id="form-desc" placeholder="Descrição" style="grid-column: 1 / -1;">
+            </div>
+            <div class="grid grid-2" style="margin-top: 1rem;">
+                <button id="btn-add" class="btn btn-primary">+ Adicionar</button>
+                <label class="btn btn-blue" style="text-align: center; display: flex; align-items: center; justify-content: center;">
+                    <span id="txt-import">Importar</span>
+                    <input type="file" id="file-import" accept=".csv" style="display: none;">
+                </label>
+                <button id="btn-csv" class="btn btn-green">📥 CSV</button>
+                <button id="btn-pdf" class="btn btn-red">📄 PDF</button>
+            </div>
+        </div>
 
-        function Computabilis() {
-            const [lang, setLang] = useState('pt-br');
-            const [darkMode, setDarkMode] = useState(true);
-            const [transactions, setTransactions] = useState([]);
-            const [monthlyGoal, setMonthlyGoal] = useState(3000);
-            const [equity, setEquity] = useState(0);
-            const [editingGoal, setEditingGoal] = useState(false);
-            const [editingEquity, setEditingEquity] = useState(false);
-            const [tempGoal, setTempGoal] = useState('3000');
-            const [tempEquity, setTempEquity] = useState('0');
-            const [deferredPrompt, setDeferredPrompt] = useState(null);
-            const [showInstallButton, setShowInstallButton] = useState(false);
-            const [formData, setFormData] = useState({
-                date: new Date().toISOString().split('T')[0],
-                type: 'despesa',
-                category: 'Academia',
-                value: '',
-                description: ''
-            });
+        <!-- Tabela -->
+        <div class="card">
+            <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">📋 <span id="txt-txs">Lançamentos</span> (<span id="count-txs">0</span>)</h2>
+            <div style="overflow-x: auto;">
+                <table id="table">
+                    <thead>
+                        <tr>
+                            <th id="th-date">Data</th>
+                            <th id="th-type">Tipo</th>
+                            <th id="th-category">Categoria</th>
+                            <th id="th-desc">Descrição</th>
+                            <th id="th-value">Valor</th>
+                            <th>🗑️</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+                <div id="no-txs" style="text-align: center; padding: 3rem; opacity: 0.5;">Nenhum lançamento</div>
+            </div>
+        </div>
+    </div>
 
-            const translations = {
-                'pt-br': {
-                    title: 'Computabilis',
-                    subtitle: 'Sistema profissional',
-                    income: 'Receitas',
-                    expense: 'Despesas',
-                    balance: 'Saldo',
-                    monthlyGoal: 'Meta Mensal (clique)',
-                    equity: 'Patrimônio (clique)',
-                    statistics: 'Estatísticas',
-                    distribution: 'Distribuição',
-                    addTransaction: 'Adicionar',
-                    launches: 'Lançamentos',
-                    noLaunches: 'Nenhum lançamento',
-                    noData: 'Sem dados',
-                    date: 'Data',
-                    type: 'Tipo',
-                    category: 'Categoria',
-                    value: 'Valor',
-                    description: 'Descrição',
-                    add: 'Adicionar',
-                    csv: 'CSV',
-                    pdf: 'PDF',
-                    import: 'Importar',
-                    mostFrequent: 'Categoria + Frequente',
-                    avgTicket: 'Ticket Médio',
-                    totalTransactions: 'Total Transações',
-                    receita: 'Receita',
-                    despesa: 'Despesa'
-                },
-                'en': {
-                    title: 'Computabilis',
-                    subtitle: 'Professional system',
-                    income: 'Income',
-                    expense: 'Expenses',
-                    balance: 'Balance',
-                    monthlyGoal: 'Monthly Goal (click)',
-                    equity: 'Equity (click)',
-                    statistics: 'Statistics',
-                    distribution: 'Distribution',
-                    addTransaction: 'Add',
-                    launches: 'Transactions',
-                    noLaunches: 'No transactions',
-                    noData: 'No data',
-                    date: 'Date',
-                    type: 'Type',
-                    category: 'Category',
-                    value: 'Value',
-                    description: 'Description',
-                    add: 'Add',
-                    csv: 'CSV',
-                    pdf: 'PDF',
-                    import: 'Import',
-                    mostFrequent: 'Most Frequent',
-                    avgTicket: 'Avg Ticket',
-                    totalTransactions: 'Total Transactions',
-                    receita: 'Income',
-                    despesa: 'Expense'
-                },
-                'es': {
-                    title: 'Computabilis',
-                    subtitle: 'Sistema profesional',
-                    income: 'Ingresos',
-                    expense: 'Gastos',
-                    balance: 'Saldo',
-                    monthlyGoal: 'Meta Mensual (clic)',
-                    equity: 'Patrimonio (clic)',
-                    statistics: 'Estadísticas',
-                    distribution: 'Distribución',
-                    addTransaction: 'Agregar',
-                    launches: 'Lanzamientos',
-                    noLaunches: 'Sin lanzamientos',
-                    noData: 'Sin datos',
-                    date: 'Fecha',
-                    type: 'Tipo',
-                    category: 'Categoría',
-                    value: 'Valor',
-                    description: 'Descripción',
-                    add: 'Agregar',
-                    csv: 'CSV',
-                    pdf: 'PDF',
-                    import: 'Importar',
-                    mostFrequent: 'Más Frecuente',
-                    avgTicket: 'Ticket Promedio',
-                    totalTransactions: 'Total Transacciones',
-                    receita: 'Ingreso',
-                    despesa: 'Gasto'
+<script>
+// Estado
+let state = {
+    lang: 'pt-br',
+    dark: true,
+    txs: [],
+    goal: 3000,
+    equity: 0
+};
+
+// Traduções
+const t = {
+    'pt-br': { title: 'Computabilis', subtitle: 'Sistema profissional', income: 'Receitas', expense: 'Despesas', balance: 'Saldo', goal: 'Meta Mensal (clique)', equity: 'Patrimônio (clique)', stats: 'Estatísticas', add: 'Adicionar', date: 'Data', type: 'Tipo', category: 'Categoria', value: 'Valor', desc: 'Descrição', csv: 'CSV', pdf: 'PDF', import: 'Importar', txs: 'Lançamentos', noTxs: 'Nenhum lançamento', freq: 'Categoria + Frequente', avg: 'Ticket Médio', total: 'Total', receita: 'Receita', despesa: 'Despesa' },
+    'en': { title: 'Computabilis', subtitle: 'Professional system', income: 'Income', expense: 'Expenses', balance: 'Balance', goal: 'Monthly Goal (click)', equity: 'Equity (click)', stats: 'Statistics', add: 'Add', date: 'Date', type: 'Type', category: 'Category', value: 'Value', desc: 'Description', csv: 'CSV', pdf: 'PDF', import: 'Import', txs: 'Transactions', noTxs: 'No transactions', freq: 'Most Frequent', avg: 'Avg Ticket', total: 'Total', receita: 'Income', despesa: 'Expense' },
+    'es': { title: 'Computabilis', subtitle: 'Sistema profesional', income: 'Ingresos', expense: 'Gastos', balance: 'Saldo', goal: 'Meta Mensual (clic)', equity: 'Patrimonio (clic)', stats: 'Estadísticas', add: 'Agregar', date: 'Fecha', type: 'Tipo', category: 'Categoría', value: 'Valor', desc: 'Descripción', csv: 'CSV', pdf: 'PDF', import: 'Importar', txs: 'Transacciones', noTxs: 'Sin transacciones', freq: 'Más Frecuente', avg: 'Ticket Promedio', total: 'Total', receita: 'Ingreso', despesa: 'Gasto' }
+};
+
+const cats = ['Academia', 'Água', 'Aluguel', 'Beleza', 'Combustível', 'Cursos', 'Delivery', 'Educação', 'Farmácia', 'Gás', 'Higiene Pessoal', 'Hobbies', 'Internet', 'Investimentos', 'Lazer', 'Livros', 'Luz', 'Moradia', 'Outros', 'Restaurante', 'Roupas', 'Saúde', 'Salário', 'Supermercado', 'Telefone', 'Transporte', 'Uber/Taxi'];
+
+// Init
+document.getElementById('form-date').value = new Date().toISOString().split('T')[0];
+cats.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    document.getElementById('form-category').appendChild(opt);
+});
+
+// Funções
+function calcTotals() {
+    return state.txs.reduce((a, t) => {
+        const v = parseFloat(t.value);
+        t.type === 'receita' ? a.income += v : a.expense += v;
+        return a;
+    }, { income: 0, expense: 0 });
+}
+
+function updateUI() {
+    const txt = t[state.lang];
+    const totals = calcTotals();
+    const balance = totals.income - totals.expense;
+    
+    // Textos
+    document.getElementById('title').textContent = txt.title;
+    document.getElementById('subtitle').textContent = txt.subtitle;
+    document.getElementById('txt-income').textContent = txt.income;
+    document.getElementById('txt-expense').textContent = txt.expense;
+    document.getElementById('txt-balance').textContent = txt.balance;
+    document.getElementById('txt-goal').textContent = txt.goal;
+    document.getElementById('txt-equity').textContent = txt.equity;
+    document.getElementById('txt-stats').textContent = txt.stats;
+    document.getElementById('txt-add').textContent = txt.add;
+    document.getElementById('txt-import').textContent = txt.import;
+    document.getElementById('txt-txs').textContent = txt.txs;
+    document.getElementById('txt-freq').textContent = txt.freq;
+    document.getElementById('txt-avg').textContent = txt.avg;
+    document.getElementById('txt-total').textContent = txt.total;
+    document.getElementById('th-date').textContent = txt.date;
+    document.getElementById('th-type').textContent = txt.type;
+    document.getElementById('th-category').textContent = txt.category;
+    document.getElementById('th-desc').textContent = txt.desc;
+    document.getElementById('th-value').textContent = txt.value;
+    document.getElementById('no-txs').textContent = txt.noTxs;
+    document.getElementById('form-value').placeholder = txt.value;
+    document.getElementById('form-desc').placeholder = txt.desc;
+    document.getElementById('form-type').innerHTML = `<option value="despesa">${txt.despesa}</option><option value="receita">${txt.receita}</option>`;
+    
+    // Valores
+    document.getElementById('val-income').textContent = '$ ' + totals.income.toFixed(2);
+    document.getElementById('val-expense').textContent = '$ ' + totals.expense.toFixed(2);
+    document.getElementById('val-balance').textContent = '$ ' + balance.toFixed(2);
+    document.getElementById('val-balance').className = balance >= 0 ? 'text-blue' : 'text-red';
+    document.getElementById('val-goal').textContent = '$ ' + state.goal.toFixed(2);
+    document.getElementById('val-equity').textContent = '$ ' + state.equity.toFixed(2);
+    document.getElementById('count-txs').textContent = state.txs.length;
+    
+    // Stats
+    const freq = Object.entries(state.txs.reduce((a, t) => { a[t.category] = (a[t.category] || 0) + 1; return a; }, {})).sort((a, b) => b[1] - a[1])[0];
+    document.getElementById('val-freq').textContent = freq ? freq[0] : 'N/A';
+    const avg = state.txs.length ? (totals.income + totals.expense) / state.txs.length : 0;
+    document.getElementById('val-avg').textContent = '$ ' + avg.toFixed(2);
+    document.getElementById('val-total').textContent = state.txs.length;
+    
+    // Tabela
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = '';
+    if (state.txs.length === 0) {
+        document.getElementById('no-txs').classList.remove('hidden');
+        document.getElementById('table').classList.add('hidden');
+    } else {
+        document.getElementById('no-txs').classList.add('hidden');
+        document.getElementById('table').classList.remove('hidden');
+        state.txs.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(tx => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${tx.date}</td>
+                <td><span class="badge ${tx.type === 'receita' ? 'badge-green' : 'badge-red'}">${tx.type === 'receita' ? txt.receita : txt.despesa}</span></td>
+                <td>${tx.category}</td>
+                <td>${tx.description || '-'}</td>
+                <td style="font-weight: bold;" class="${tx.type === 'receita' ? 'text-green' : 'text-red'}">$ ${parseFloat(tx.value).toFixed(2)}</td>
+                <td><button onclick="deleteTx(${tx.id})" style="background: none; border: none; cursor: pointer; font-size: 1.25rem;">🗑️</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+    
+    // Theme
+    document.getElementById('body').className = state.dark ? 'bg-dark' : 'bg-light';
+    document.querySelectorAll('.card').forEach(c => c.className = state.dark ? 'card' : 'card card-light');
+    document.querySelectorAll('input, select').forEach(i => i.className = state.dark ? '' : 'input-light');
+    document.getElementById('table').className = state.dark ? '' : 'table-light';
+    document.getElementById('theme-btn').textContent = state.dark ? '☀️' : '🌙';
+}
+
+function addTx() {
+    const value = document.getElementById('form-value').value;
+    if (!value || parseFloat(value) <= 0) return;
+    
+    state.txs.push({
+        id: Date.now(),
+        date: document.getElementById('form-date').value,
+        type: document.getElementById('form-type').value,
+        category: document.getElementById('form-category').value,
+        value: value,
+        description: document.getElementById('form-desc').value
+    });
+    
+    document.getElementById('form-value').value = '';
+    document.getElementById('form-desc').value = '';
+    document.getElementById('form-date').value = new Date().toISOString().split('T')[0];
+    updateUI();
+}
+
+function deleteTx(id) {
+    state.txs = state.txs.filter(t => t.id !== id);
+    updateUI();
+}
+
+function exportCSV() {
+    if (!state.txs.length) return alert(t[state.lang].noTxs);
+    const csv = [['Data', 'Tipo', 'Categoria', 'Valor', 'Descrição'], ...state.txs.map(t => [t.date, t.type, t.category, t.value, t.description])].map(r => r.join(',')).join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `computabilis_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function exportPDF() {
+    if (!state.txs.length) return alert(t[state.lang].noTxs);
+    const txt = t[state.lang];
+    const totals = calcTotals();
+    const balance = totals.income - totals.expense;
+    const html = `<html><head><meta charset="UTF-8"><title>Relatório</title><style>body{font-family:Arial;padding:30px;max-width:1000px;margin:0 auto}h1{color:#8b5cf6;text-align:center}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #ddd;padding:10px;text-align:left}th{background:#8b5cf6;color:white}tr:nth-child(even){background:#f9f9f9}</style></head><body><h1>💰 Computabilis</h1><p style="text-align:center">${new Date().toLocaleDateString()}</p><h2>Resumo</h2><p>${txt.income}: $ ${totals.income.toFixed(2)}</p><p>${txt.expense}: $ ${totals.expense.toFixed(2)}</p><p>${txt.balance}: $ ${balance.toFixed(2)}</p><h2>${txt.txs}</h2><table><tr><th>${txt.date}</th><th>${txt.type}</th><th>${txt.category}</th><th>${txt.desc}</th><th>${txt.value}</th></tr>${state.txs.map(e => `<tr><td>${e.date}</td><td>${e.type}</td><td>${e.category}</td><td>${e.description || '-'}</td><td>$ ${parseFloat(e.value).toFixed(2)}</td></tr>`).join('')}</table><p style="text-align:center;margin-top:40px">Pressione Ctrl+P para salvar como PDF</p></body></html>`;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `computabilis_${new Date().toISOString().split('T')[0]}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// Events
+document.getElementById('lang').addEventListener('change', e => { state.lang = e.target.value; updateUI(); });
+document.getElementById('theme-btn').addEventListener('click', () => { state.dark = !state.dark; updateUI(); });
+document.getElementById('btn-add').addEventListener('click', addTx);
+document.getElementById('btn-csv').addEventListener('click', exportCSV);
+document.getElementById('btn-pdf').addEventListener('click', exportPDF);
+
+document.getElementById('card-goal').addEventListener('click', () => {
+    const input = document.getElementById('input-goal');
+    const val = document.getElementById('val-goal');
+    input.value = state.goal;
+    input.classList.remove('hidden');
+    val.classList.add('hidden');
+    input.focus();
+});
+
+document.getElementById('input-goal').addEventListener('blur', e => {
+    state.goal = parseFloat(e.target.value) || 3000;
+    e.target.classList.add('hidden');
+    document.getElementById('val-goal').classList.remove('hidden');
+    updateUI();
+});
+
+document.getElementById('card-equity').addEventListener('click', () => {
+    const input = document.getElementById('input-equity');
+    const val = document.getElementById('val-equity');
+    input.value = state.equity;
+    input.classList.remove('hidden');
+    val.classList.add('hidden');
+    input.focus();
+});
+
+document.getElementById('input-equity').addEventListener('blur', e => {
+    state.equity = parseFloat(e.target.value) || 0;
+    e.target.classList.add('hidden');
+    document.getElementById('val-equity').classList.remove('hidden');
+    updateUI();
+});
+
+document.getElementById('file-import').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        try {
+            const lines = ev.target.result.split('\n');
+            let imported = 0;
+            for (let i = 1; i < lines.length; i++) {
+                const [date, type, category, value, description] = lines[i].split(',');
+                if (date && type && category && value) {
+                    state.txs.push({ id: Date.now() + i, date: date.trim(), type: type.trim(), category: category.trim(), value: value.trim(), description: description?.trim() || '' });
+                    imported++;
                 }
-            };
-
-            const categories = [
-                'Academia', 'Água', 'Aluguel', 'Beleza', 'Combustível', 'Cursos',
-                'Delivery', 'Educação', 'Farmácia', 'Gás', 'Higiene Pessoal', 'Hobbies',
-                'Internet', 'Investimentos', 'Lazer', 'Livros', 'Luz', 'Moradia',
-                'Outros', 'Restaurante', 'Roupas', 'Saúde', 'Salário', 'Supermercado',
-                'Telefone', 'Transporte', 'Uber/Taxi'
-            ].sort();
-
-            const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444', '#14b8a6', '#6366f1'];
-
-            const t = translations[lang];
-
-            useEffect(() => {
-                const handler = (e) => {
-                    e.preventDefault();
-                    setDeferredPrompt(e);
-                    setShowInstallButton(true);
-                };
-
-                window.addEventListener('beforeinstallprompt', handler);
-
-                if (window.matchMedia('(display-mode: standalone)').matches) {
-                    setShowInstallButton(false);
-                }
-
-                return () => window.removeEventListener('beforeinstallprompt', handler);
-            }, []);
-
-            const handleInstallClick = async () => {
-                if (!deferredPrompt) return;
-
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-
-                if (outcome === 'accepted') {
-                    setShowInstallButton(false);
-                }
-
-                setDeferredPrompt(null);
-            };
-
-            const totals = transactions.reduce((acc, t) => {
-                const value = parseFloat(t.value);
-                if (t.type === 'receita') acc.income += value;
-                else acc.expense += value;
-                return acc;
-            }, { income: 0, expense: 0 });
-
-            const balance = totals.income - totals.expense;
-
-            const categoryData = transactions.reduce((acc, t) => {
-                if (t.type === 'despesa') {
-                    acc[t.category] = (acc[t.category] || 0) + parseFloat(t.value);
-                }
-                return acc;
-            }, {});
-
-            const chartData = Object.entries(categoryData).map(([name, value]) => ({
-                name,
-                value: parseFloat(value.toFixed(2))
-            }));
-
-            const mostFrequent = Object.entries(
-                transactions.reduce((acc, t) => {
-                    acc[t.category] = (acc[t.category] || 0) + 1;
-                    return acc;
-                }, {})
-            ).sort((a, b) => b[1] - a[1])[0];
-
-            const avgTicket = transactions.length > 0
-                ? (totals.income + totals.expense) / transactions.length
-                : 0;
-
-            const handleSubmit = () => {
-                if (!formData.value || parseFloat(formData.value) <= 0) return;
-
-                setTransactions([...transactions, { ...formData, id: Date.now() }]);
-                setFormData({
-                    date: new Date().toISOString().split('T')[0],
-                    type: 'despesa',
-                    category: 'Academia',
-                    value: '',
-                    description: ''
-                });
-            };
-
-            const deleteTransaction = (id) => {
-                setTransactions(transactions.filter(t => t.id !== id));
-            };
-
-            const handleGoalClick = () => {
-                setTempGoal(monthlyGoal.toString());
-                setEditingGoal(true);
-            };
-
-            const handleEquityClick = () => {
-                setTempEquity(equity.toString());
-                setEditingEquity(true);
-            };
-
-            const saveGoal = () => {
-                const value = parseFloat(tempGoal);
-                if (!isNaN(value) && value >= 0) {
-                    setMonthlyGoal(value);
-                }
-                setEditingGoal(false);
-            };
-
-            const saveEquity = () => {
-                const value = parseFloat(tempEquity);
-                if (!isNaN(value)) {
-                    setEquity(value);
-                }
-                setEditingEquity(false);
-            };
-
-            const exportCSV = () => {
-                if (transactions.length === 0) {
-                    alert(lang === 'pt-br' ? 'Nenhum lançamento para exportar!' : lang === 'en' ? 'No transactions to export!' : 'No hay lanzamientos para exportar!');
-                    return;
-                }
-
-                const csv = [
-                    ['Data', 'Tipo', 'Categoria', 'Valor', 'Descrição'],
-                    ...transactions.map(t => [t.date, t.type, t.category, t.value, t.description])
-                ].map(row => row.join(',')).join('\n');
-
-                const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `computabilis_${new Date().toISOString().split('T')[0]}.csv`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            };
-
-            const exportPDF = () => {
-                if (transactions.length === 0) {
-                    alert(lang === 'pt-br' ? 'Nenhum lançamento para exportar!' : lang === 'en' ? 'No transactions to export!' : 'No hay lanzamientos para exportar!');
-                    return;
-                }
-
-                const html = `<html><head><meta charset="UTF-8"><title>Relatório Computabilis</title><style>@media print{body{margin:0;padding:20px}}body{font-family:Arial,sans-serif;padding:30px;max-width:1000px;margin:0 auto;background:#fff;color:#000}h1{color:#8b5cf6;text-align:center;margin-bottom:10px}h2{color:#333;border-bottom:2px solid #8b5cf6;padding-bottom:5px;margin-top:30px}table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}th,td{border:1px solid #ddd;padding:10px;text-align:left}th{background:#8b5cf6;color:white;font-weight:bold}tr:nth-child(even){background:#f9f9f9}.summary{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:20px;border-radius:10px;margin:20px 0;box-shadow:0 4px 6px rgba(0,0,0,0.1)}.summary-item{display:inline-block;width:32%;margin:10px 0;text-align:center}.summary-item strong{display:block;font-size:12px;opacity:0.9;margin-bottom:5px}.summary-item .value{font-size:24px;font-weight:bold}.header{text-align:center;margin-bottom:30px}.header p{color:#666;font-size:14px}.footer{text-align:center;margin-top:40px;padding-top:20px;border-top:2px solid #eee;color:#999;font-size:12px}</style></head><body><div class="header"><h1>💰 Computabilis</h1><p>Relatório Financeiro Completo</p><p><strong>Gerado em:</strong> ${new Date().toLocaleString(lang === 'pt-br' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES')}</p></div><div class="summary"><h2 style="color:white;border:none;margin-top:0">Resumo Financeiro</h2><div class="summary-item"><strong>${t.income}</strong><div class="value">$ ${totals.income.toFixed(2)}</div></div><div class="summary-item"><strong>${t.expense}</strong><div class="value">$ ${totals.expense.toFixed(2)}</div></div><div class="summary-item"><strong>${t.balance}</strong><div class="value">$ ${balance.toFixed(2)}</div></div></div><h2>${t.launches} (${transactions.length})</h2><table><thead><tr><th>${t.date}</th><th>${t.type}</th><th>${t.category}</th><th>${t.description}</th><th style="text-align:right">${t.value}</th></tr></thead><tbody>${transactions.sort((a, b) => new Date(b.date) - new Date(a.date)).map(e => `<tr><td>${new Date(e.date + 'T00:00:00').toLocaleDateString(lang === 'pt-br' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES')}</td><td><span style="padding:4px 8px;border-radius:4px;font-size:12px;background:${e.type === 'receita' ? '#d1fae5' : '#fee2e2'};color:${e.type === 'receita' ? '#065f46' : '#991b1b'}">${e.type === 'receita' ? t.receita : t.despesa}</span></td><td>${e.category}</td><td>${e.description || '-'}</td><td style="text-align:right;font-weight:bold;color:${e.type === 'receita' ? '#059669' : '#dc2626'}">$ ${parseFloat(e.value).toFixed(2)}</td></tr>`).join('')}</tbody></table><h2>Estatísticas</h2><table><tr><td><strong>${t.mostFrequent}</strong></td><td>${mostFrequent ? mostFrequent[0] : 'N/A'}</td></tr><tr><td><strong>${t.avgTicket}</strong></td><td>$ ${avgTicket.toFixed(2)}</td></tr><tr><td><strong>${t.totalTransactions}</strong></td><td>${transactions.length}</td></tr><tr><td><strong>${t.monthlyGoal}</strong></td><td>$ ${monthlyGoal.toFixed(2)}</td></tr><tr><td><strong>${t.equity}</strong></td><td>$ ${equity.toFixed(2)}</td></tr></table><div class="footer"><p>Gerado por <strong>Computabilis</strong> - Sistema Profissional de Gestão Financeira</p><p><strong>Instruções:</strong> Pressione Ctrl+P (ou Cmd+P no Mac) e escolha "Salvar como PDF" para converter este relatório</p></div></body></html>`;
-
-                const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `computabilis_relatorio_${new Date().toISOString().split('T')[0]}.html`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-
-                alert(lang === 'pt-br' ? 'Relatório HTML baixado! Abra o arquivo e pressione Ctrl+P (ou Cmd+P) e escolha "Salvar como PDF".' :
-                    lang === 'en' ? 'HTML report downloaded! Open the file and press Ctrl+P (or Cmd+P) and choose "Save as PDF".' :
-                        'Informe HTML descargado! Abre el archivo y presiona Ctrl+P (o Cmd+P) y elige "Guardar como PDF".');
-            };
-
-            const handleImport = (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    try {
-                        const csv = event.target.result;
-                        const lines = csv.split('\n');
-                        const imported = [];
-
-                        for (let i = 1; i < lines.length; i++) {
-                            const line = lines[i].trim();
-                            if (!line) continue;
-
-                            const [date, type, category, value, description] = line.split(',');
-
-                            if (date && type && category && value) {
-                                imported.push({
-                                    id: Date.now() + i,
-                                    date: date.trim(),
-                                    type: type.trim(),
-                                    category: category.trim(),
-                                    value: value.trim(),
-                                    description: description ? description.trim() : ''
-                                });
-                            }
-                        }
-
-                        if (imported.length > 0) {
-                            setTransactions([...transactions, ...imported]);
-                            alert(`${imported.length} ${lang === 'pt-br' ? 'lançamentos importados!' : lang === 'en' ? 'transactions imported!' : 'lanzamientos importados!'}`);
-                        } else {
-                            alert(lang === 'pt-br' ? 'Nenhum lançamento válido encontrado!' : lang === 'en' ? 'No valid transactions found!' : 'No se encontraron lanzamientos válidos!');
-                        }
-                    } catch (error) {
-                        alert(lang === 'pt-br' ? 'Erro ao importar arquivo!' : lang === 'en' ? 'Error importing file!' : 'Error al importar archivo!');
-                    }
-                };
-
-                reader.readAsText(file);
-                e.target.value = '';
-            };
-
-            const bgClass = darkMode
-                ? 'bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900'
-                : 'bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100';
-
-            const cardClass = darkMode
-                ? 'bg-black/40 backdrop-blur-lg border border-white/10'
-                : 'bg-white/60 backdrop-blur-lg border border-purple-200';
-
-            const textClass = darkMode ? 'text-white' : 'text-gray-900';
-            const inputClass = darkMode ? 'bg-black text-white' : 'bg-white text-gray-900';
-
-            return React.createElement('div', { className: `min-h-screen ${bgClass} ${textClass} p-4 transition-all duration-300` },
-                React.createElement('div', { className: 'max-w-7xl mx-auto' },
-                    React.createElement('div', { className: 'flex justify-between items-center mb-8' },
-                        React.createElement('div', { className: 'flex items-center gap-3' },
-                            React.createElement('div', { className: 'w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center text-2xl' }, '💰'),
-                            React.createElement('div', null,
-                                React.createElement('h1', { className: 'text-3xl font-bold' }, t.title),
-                                React.createElement('p', { className: 'text-sm opacity-70' }, t.subtitle)
-                            )
-                        ),
-                        React.createElement('div', { className: 'flex gap-2' },
-                            React.createElement('select', {
-                                value: lang,
-                                onChange: (e) => setLang(e.target.value),
-                                className: `${inputClass} px-3 py-2 rounded-lg border ${darkMode ? 'border-white/20' : 'border-purple-300'}`
-                            },
-                                React.createElement('option', { value: 'pt-br' }, '🇧🇷 PT'),
-                                React.createElement('option', { value: 'en' }, '🇺🇸 EN'),
-                                React.createElement('option', { value: 'es' }, '🇪🇸 ES')
-                            ),
-                            React.createElement('button', {
-                                onClick: () => setDarkMode(!darkMode),
-                                className: `${cardClass} p-3 rounded-full hover:scale-110 transition-transform`
-                            },
-                                darkMode ? React.createElement(Sun, { className: 'w-5 h-5' }) : React.createElement(Moon, { className: 'w-5 h-5' })
-                            )
-                        )
-                    ),
-                )
-            );
+            }
+            if (imported) alert(`${imported} ${t[state.lang].txs}`);
+            updateUI();
+        } catch (err) {
+            alert('Erro ao importar');
         }
-    </script>
-</body>
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+});
 
+// Init
+updateUI();
+
+// PWA
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
 </html>
