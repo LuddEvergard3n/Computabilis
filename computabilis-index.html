@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Computabilis - Sistema profissional de gestão financeira">
+    <meta name="theme-color" content="#8b5cf6">
+    <title>Computabilis - Sistema Profissional</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Computabilis">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <!-- Babel Standalone -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Recharts -->
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        #root {
+            min-height: 100vh;
+        }
+
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.8);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+        const { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } = Recharts;
+
+        // Componentes dos ícones Lucide
+        const DollarSign = () => <i data-lucide="dollar-sign"></i>;
+        const TrendingUp = () => <i data-lucide="trending-up"></i>;
+        const TrendingDown = () => <i data-lucide="trending-down"></i>;
+        const Plus = () => <i data-lucide="plus"></i>;
+        const Download = () => <i data-lucide="download"></i>;
+        const Upload = () => <i data-lucide="upload"></i>;
+        const FileText = () => <i data-lucide="file-text"></i>;
+        const Sun = () => <i data-lucide="sun"></i>;
+        const Moon = () => <i data-lucide="moon"></i>;
+        const Trash2 = () => <i data-lucide="trash-2"></i>;
+        const BarChart3 = () => <i data-lucide="bar-chart-3"></i>;
+
+        // Cole aqui o código do componente Computabilis (todo o código do artifact)
+        // SUBSTITUA ESTA LINHA PELO CÓDIGO COMPLETO DO APP
+
+        function Computabilis() {
+            const [lang, setLang] = useState('pt-br');
+            const [darkMode, setDarkMode] = useState(true);
+            const [transactions, setTransactions] = useState([]);
+            const [monthlyGoal, setMonthlyGoal] = useState(3000);
+            const [equity, setEquity] = useState(0);
+            const [editingGoal, setEditingGoal] = useState(false);
+            const [editingEquity, setEditingEquity] = useState(false);
+            const [tempGoal, setTempGoal] = useState('3000');
+            const [tempEquity, setTempEquity] = useState('0');
+            const [deferredPrompt, setDeferredPrompt] = useState(null);
+            const [showInstallButton, setShowInstallButton] = useState(false);
+            const [formData, setFormData] = useState({
+                date: new Date().toISOString().split('T')[0],
+                type: 'despesa',
+                category: 'Academia',
+                value: '',
+                description: ''
+            });
+
+            const translations = {
+                'pt-br': {
+                    title: 'Computabilis',
+                    subtitle: 'Sistema profissional',
+                    income: 'Receitas',
+                    expense: 'Despesas',
+                    balance: 'Saldo',
+                    monthlyGoal: 'Meta Mensal (clique)',
+                    equity: 'Patrimônio (clique)',
+                    statistics: 'Estatísticas',
+                    distribution: 'Distribuição',
+                    addTransaction: 'Adicionar',
+                    launches: 'Lançamentos',
+                    noLaunches: 'Nenhum lançamento',
+                    noData: 'Sem dados',
+                    date: 'Data',
+                    type: 'Tipo',
+                    category: 'Categoria',
+                    value: 'Valor',
+                    description: 'Descrição',
+                    add: 'Adicionar',
+                    csv: 'CSV',
+                    pdf: 'PDF',
+                    import: 'Importar',
+                    mostFrequent: 'Categoria + Frequente',
+                    avgTicket: 'Ticket Médio',
+                    totalTransactions: 'Total Transações',
+                    receita: 'Receita',
+                    despesa: 'Despesa'
+                },
+                'en': {
+                    title: 'Computabilis',
+                    subtitle: 'Professional system',
+                    income: 'Income',
+                    expense: 'Expenses',
+                    balance: 'Balance',
+                    monthlyGoal: 'Monthly Goal (click)',
+                    equity: 'Equity (click)',
+                    statistics: 'Statistics',
+                    distribution: 'Distribution',
+                    addTransaction: 'Add',
+                    launches: 'Transactions',
+                    noLaunches: 'No transactions',
+                    noData: 'No data',
+                    date: 'Date',
+                    type: 'Type',
+                    category: 'Category',
+                    value: 'Value',
+                    description: 'Description',
+                    add: 'Add',
+                    csv: 'CSV',
+                    pdf: 'PDF',
+                    import: 'Import',
+                    mostFrequent: 'Most Frequent',
+                    avgTicket: 'Avg Ticket',
+                    totalTransactions: 'Total Transactions',
+                    receita: 'Income',
+                    despesa: 'Expense'
+                },
+                'es': {
+                    title: 'Computabilis',
+                    subtitle: 'Sistema profesional',
+                    income: 'Ingresos',
+                    expense: 'Gastos',
+                    balance: 'Saldo',
+                    monthlyGoal: 'Meta Mensual (clic)',
+                    equity: 'Patrimonio (clic)',
+                    statistics: 'Estadísticas',
+                    distribution: 'Distribución',
+                    addTransaction: 'Agregar',
+                    launches: 'Lanzamientos',
+                    noLaunches: 'Sin lanzamientos',
+                    noData: 'Sin datos',
+                    date: 'Fecha',
+                    type: 'Tipo',
+                    category: 'Categoría',
+                    value: 'Valor',
+                    description: 'Descripción',
+                    add: 'Agregar',
+                    csv: 'CSV',
+                    pdf: 'PDF',
+                    import: 'Importar',
+                    mostFrequent: 'Más Frecuente',
+                    avgTicket: 'Ticket Promedio',
+                    totalTransactions: 'Total Transacciones',
+                    receita: 'Ingreso',
+                    despesa: 'Gasto'
+                }
+            };
+
+            const categories = [
+                'Academia', 'Água', 'Aluguel', 'Beleza', 'Combustível', 'Cursos',
+                'Delivery', 'Educação', 'Farmácia', 'Gás', 'Higiene Pessoal', 'Hobbies',
+                'Internet', 'Investimentos', 'Lazer', 'Livros', 'Luz', 'Moradia',
+                'Outros', 'Restaurante', 'Roupas', 'Saúde', 'Salário', 'Supermercado',
+                'Telefone', 'Transporte', 'Uber/Taxi'
+            ].sort();
+
+            const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444', '#14b8a6', '#6366f1'];
+
+            const t = translations[lang];
+
+            useEffect(() => {
+                const handler = (e) => {
+                    e.preventDefault();
+                    setDeferredPrompt(e);
+                    setShowInstallButton(true);
+                };
+
+                window.addEventListener('beforeinstallprompt', handler);
+
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    setShowInstallButton(false);
+                }
+
+                return () => window.removeEventListener('beforeinstallprompt', handler);
+            }, []);
+
+            const handleInstallClick = async () => {
+                if (!deferredPrompt) return;
+
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+
+                if (outcome === 'accepted') {
+                    setShowInstallButton(false);
+                }
+
+                setDeferredPrompt(null);
+            };
+
+            const totals = transactions.reduce((acc, t) => {
+                const value = parseFloat(t.value);
+                if (t.type === 'receita') acc.income += value;
+                else acc.expense += value;
+                return acc;
+            }, { income: 0, expense: 0 });
+
+            const balance = totals.income - totals.expense;
+
+            const categoryData = transactions.reduce((acc, t) => {
+                if (t.type === 'despesa') {
+                    acc[t.category] = (acc[t.category] || 0) + parseFloat(t.value);
+                }
+                return acc;
+            }, {});
+
+            const chartData = Object.entries(categoryData).map(([name, value]) => ({
+                name,
+                value: parseFloat(value.toFixed(2))
+            }));
+
+            const mostFrequent = Object.entries(
+                transactions.reduce((acc, t) => {
+                    acc[t.category] = (acc[t.category] || 0) + 1;
+                    return acc;
+                }, {})
+            ).sort((a, b) => b[1] - a[1])[0];
+
+            const avgTicket = transactions.length > 0
+                ? (totals.income + totals.expense) / transactions.length
+                : 0;
+
+            const handleSubmit = () => {
+                if (!formData.value || parseFloat(formData.value) <= 0) return;
+
+                setTransactions([...transactions, { ...formData, id: Date.now() }]);
+                setFormData({
+                    date: new Date().toISOString().split('T')[0],
+                    type: 'despesa',
+                    category: 'Academia',
+                    value: '',
+                    description: ''
+                });
+            };
+
+            const deleteTransaction = (id) => {
+                setTransactions(transactions.filter(t => t.id !== id));
+            };
+
+            const handleGoalClick = () => {
+                setTempGoal(monthlyGoal.toString());
+                setEditingGoal(true);
+            };
+
+            const handleEquityClick = () => {
+                setTempEquity(equity.toString());
+                setEditingEquity(true);
+            };
+
+            const saveGoal = () => {
+                const value = parseFloat(tempGoal);
+                if (!isNaN(value) && value >= 0) {
+                    setMonthlyGoal(value);
+                }
+                setEditingGoal(false);
+            };
+
+            const saveEquity = () => {
+                const value = parseFloat(tempEquity);
+                if (!isNaN(value)) {
+                    setEquity(value);
+                }
+                setEditingEquity(false);
+            };
+
+            const exportCSV = () => {
+                if (transactions.length === 0) {
+                    alert(lang === 'pt-br' ? 'Nenhum lançamento para exportar!' : lang === 'en' ? 'No transactions to export!' : 'No hay lanzamientos para exportar!');
+                    return;
+                }
+
+                const csv = [
+                    ['Data', 'Tipo', 'Categoria', 'Valor', 'Descrição'],
+                    ...transactions.map(t => [t.date, t.type, t.category, t.value, t.description])
+                ].map(row => row.join(',')).join('\n');
+
+                const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `computabilis_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            const exportPDF = () => {
+                if (transactions.length === 0) {
+                    alert(lang === 'pt-br' ? 'Nenhum lançamento para exportar!' : lang === 'en' ? 'No transactions to export!' : 'No hay lanzamientos para exportar!');
+                    return;
+                }
+
+                const html = `<html><head><meta charset="UTF-8"><title>Relatório Computabilis</title><style>@media print{body{margin:0;padding:20px}}body{font-family:Arial,sans-serif;padding:30px;max-width:1000px;margin:0 auto;background:#fff;color:#000}h1{color:#8b5cf6;text-align:center;margin-bottom:10px}h2{color:#333;border-bottom:2px solid #8b5cf6;padding-bottom:5px;margin-top:30px}table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}th,td{border:1px solid #ddd;padding:10px;text-align:left}th{background:#8b5cf6;color:white;font-weight:bold}tr:nth-child(even){background:#f9f9f9}.summary{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:20px;border-radius:10px;margin:20px 0;box-shadow:0 4px 6px rgba(0,0,0,0.1)}.summary-item{display:inline-block;width:32%;margin:10px 0;text-align:center}.summary-item strong{display:block;font-size:12px;opacity:0.9;margin-bottom:5px}.summary-item .value{font-size:24px;font-weight:bold}.header{text-align:center;margin-bottom:30px}.header p{color:#666;font-size:14px}.footer{text-align:center;margin-top:40px;padding-top:20px;border-top:2px solid #eee;color:#999;font-size:12px}</style></head><body><div class="header"><h1>💰 Computabilis</h1><p>Relatório Financeiro Completo</p><p><strong>Gerado em:</strong> ${new Date().toLocaleString(lang === 'pt-br' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES')}</p></div><div class="summary"><h2 style="color:white;border:none;margin-top:0">Resumo Financeiro</h2><div class="summary-item"><strong>${t.income}</strong><div class="value">$ ${totals.income.toFixed(2)}</div></div><div class="summary-item"><strong>${t.expense}</strong><div class="value">$ ${totals.expense.toFixed(2)}</div></div><div class="summary-item"><strong>${t.balance}</strong><div class="value">$ ${balance.toFixed(2)}</div></div></div><h2>${t.launches} (${transactions.length})</h2><table><thead><tr><th>${t.date}</th><th>${t.type}</th><th>${t.category}</th><th>${t.description}</th><th style="text-align:right">${t.value}</th></tr></thead><tbody>${transactions.sort((a, b) => new Date(b.date) - new Date(a.date)).map(e => `<tr><td>${new Date(e.date + 'T00:00:00').toLocaleDateString(lang === 'pt-br' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES')}</td><td><span style="padding:4px 8px;border-radius:4px;font-size:12px;background:${e.type === 'receita' ? '#d1fae5' : '#fee2e2'};color:${e.type === 'receita' ? '#065f46' : '#991b1b'}">${e.type === 'receita' ? t.receita : t.despesa}</span></td><td>${e.category}</td><td>${e.description || '-'}</td><td style="text-align:right;font-weight:bold;color:${e.type === 'receita' ? '#059669' : '#dc2626'}">$ ${parseFloat(e.value).toFixed(2)}</td></tr>`).join('')}</tbody></table><h2>Estatísticas</h2><table><tr><td><strong>${t.mostFrequent}</strong></td><td>${mostFrequent ? mostFrequent[0] : 'N/A'}</td></tr><tr><td><strong>${t.avgTicket}</strong></td><td>$ ${avgTicket.toFixed(2)}</td></tr><tr><td><strong>${t.totalTransactions}</strong></td><td>${transactions.length}</td></tr><tr><td><strong>${t.monthlyGoal}</strong></td><td>$ ${monthlyGoal.toFixed(2)}</td></tr><tr><td><strong>${t.equity}</strong></td><td>$ ${equity.toFixed(2)}</td></tr></table><div class="footer"><p>Gerado por <strong>Computabilis</strong> - Sistema Profissional de Gestão Financeira</p><p><strong>Instruções:</strong> Pressione Ctrl+P (ou Cmd+P no Mac) e escolha "Salvar como PDF" para converter este relatório</p></div></body></html>`;
+
+                const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `computabilis_relatorio_${new Date().toISOString().split('T')[0]}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                alert(lang === 'pt-br' ? 'Relatório HTML baixado! Abra o arquivo e pressione Ctrl+P (ou Cmd+P) e escolha "Salvar como PDF".' :
+                    lang === 'en' ? 'HTML report downloaded! Open the file and press Ctrl+P (or Cmd+P) and choose "Save as PDF".' :
+                        'Informe HTML descargado! Abre el archivo y presiona Ctrl+P (o Cmd+P) y elige "Guardar como PDF".');
+            };
+
+            const handleImport = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const csv = event.target.result;
+                        const lines = csv.split('\n');
+                        const imported = [];
+
+                        for (let i = 1; i < lines.length; i++) {
+                            const line = lines[i].trim();
+                            if (!line) continue;
+
+                            const [date, type, category, value, description] = line.split(',');
+
+                            if (date && type && category && value) {
+                                imported.push({
+                                    id: Date.now() + i,
+                                    date: date.trim(),
+                                    type: type.trim(),
+                                    category: category.trim(),
+                                    value: value.trim(),
+                                    description: description ? description.trim() : ''
+                                });
+                            }
+                        }
+
+                        if (imported.length > 0) {
+                            setTransactions([...transactions, ...imported]);
+                            alert(`${imported.length} ${lang === 'pt-br' ? 'lançamentos importados!' : lang === 'en' ? 'transactions imported!' : 'lanzamientos importados!'}`);
+                        } else {
+                            alert(lang === 'pt-br' ? 'Nenhum lançamento válido encontrado!' : lang === 'en' ? 'No valid transactions found!' : 'No se encontraron lanzamientos válidos!');
+                        }
+                    } catch (error) {
+                        alert(lang === 'pt-br' ? 'Erro ao importar arquivo!' : lang === 'en' ? 'Error importing file!' : 'Error al importar archivo!');
+                    }
+                };
+
+                reader.readAsText(file);
+                e.target.value = '';
+            };
+
+            const bgClass = darkMode
+                ? 'bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900'
+                : 'bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100';
+
+            const cardClass = darkMode
+                ? 'bg-black/40 backdrop-blur-lg border border-white/10'
+                : 'bg-white/60 backdrop-blur-lg border border-purple-200';
+
+            const textClass = darkMode ? 'text-white' : 'text-gray-900';
+            const inputClass = darkMode ? 'bg-black text-white' : 'bg-white text-gray-900';
+
+            return React.createElement('div', { className: `min-h-screen ${bgClass} ${textClass} p-4 transition-all duration-300` },
+                React.createElement('div', { className: 'max-w-7xl mx-auto' },
+                    React.createElement('div', { className: 'flex justify-between items-center mb-8' },
+                        React.createElement('div', { className: 'flex items-center gap-3' },
+                            React.createElement('div', { className: 'w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center text-2xl' }, '💰'),
+                            React.createElement('div', null,
+                                React.createElement('h1', { className: 'text-3xl font-bold' }, t.title),
+                                React.createElement('p', { className: 'text-sm opacity-70' }, t.subtitle)
+                            )
+                        ),
+                        React.createElement('div', { className: 'flex gap-2' },
+                            React.createElement('select', {
+                                value: lang,
+                                onChange: (e) => setLang(e.target.value),
+                                className: `${inputClass} px-3 py-2 rounded-lg border ${darkMode ? 'border-white/20' : 'border-purple-300'}`
+                            },
+                                React.createElement('option', { value: 'pt-br' }, '🇧🇷 PT'),
+                                React.createElement('option', { value: 'en' }, '🇺🇸 EN'),
+                                React.createElement('option', { value: 'es' }, '🇪🇸 ES')
+                            ),
+                            React.createElement('button', {
+                                onClick: () => setDarkMode(!darkMode),
+                                className: `${cardClass} p-3 rounded-full hover:scale-110 transition-transform`
+                            },
+                                darkMode ? React.createElement(Sun, { className: 'w-5 h-5' }) : React.createElement(Moon, { className: 'w-5 h-5' })
+                            )
+                        )
+                    ),
+                )
+            );
+        }
+    </script>
+</body>
+
+</html>
