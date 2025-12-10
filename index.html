@@ -7,8 +7,10 @@
     <meta name="theme-color" content="#8b5cf6">
     <title>Computabilis - Sistema Profissional</title>
     
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,7 +30,9 @@
         .btn-red { background: #ef4444; color: white; }
         .btn-blue { background: #3b82f6; color: white; }
         input, select { padding: 0.75rem; border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.2); background: #000; color: #fff; width: 100%; font-size: 1rem; }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
         .input-light { background: #fff; color: #000; border: 1px solid #d1d5db; }
+        .input-light[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0); }
         .text-green { color: #10b981; }
         .text-red { color: #ef4444; }
         .text-blue { color: #3b82f6; }
@@ -46,7 +50,12 @@
         .badge-red { background: rgba(239,68,68,0.2); color: #ef4444; }
         .clickable { cursor: pointer; transition: transform 0.2s; }
         .clickable:hover { transform: scale(1.05); }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
+        #chartCanvas { max-width: 400px; max-height: 400px; margin: 0 auto; display: block; }
+        .chart-legend { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 1rem; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
+        .legend-color { width: 16px; height: 16px; border-radius: 4px; }
+        .edit-input { background: rgba(139,92,246,0.2) !important; border: 2px solid #8b5cf6 !important; }
         @media (max-width: 768px) {
             .grid-3, .grid-2 { grid-template-columns: 1fr; }
             input, select, .btn { font-size: 16px; }
@@ -94,32 +103,39 @@
         <div class="grid grid-2">
             <div class="card clickable" id="card-goal">
                 <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;" id="txt-goal">Meta Mensal (clique)</div>
-                <input type="number" id="input-goal" class="hidden" style="font-size: 1.5rem; font-weight: bold;">
                 <div class="text-purple" style="font-size: 1.5rem; font-weight: bold;" id="val-goal">$ 3000.00</div>
             </div>
             <div class="card clickable" id="card-equity">
                 <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;" id="txt-equity">Patrimônio (clique)</div>
-                <input type="number" id="input-equity" class="hidden" style="font-size: 1.5rem; font-weight: bold;">
                 <div class="text-yellow" style="font-size: 1.5rem; font-weight: bold;" id="val-equity">$ 0.00</div>
             </div>
         </div>
 
-        <!-- Estatísticas -->
-        <div class="card">
-            <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">📊 <span id="txt-stats">Estatísticas</span></h2>
-            <div class="grid grid-3">
-                <div>
-                    <div style="font-size: 0.875rem; opacity: 0.7;" id="txt-freq">Categoria + Frequente</div>
-                    <div style="font-weight: bold;" id="val-freq">N/A</div>
+        <!-- Estatísticas e Gráfico -->
+        <div class="grid grid-2">
+            <div class="card">
+                <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">📊 <span id="txt-stats">Estatísticas</span></h2>
+                <div class="grid" style="gap: 0.75rem;">
+                    <div>
+                        <div style="font-size: 0.875rem; opacity: 0.7;" id="txt-freq">Categoria + Frequente</div>
+                        <div style="font-weight: bold;" id="val-freq">N/A</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.875rem; opacity: 0.7;" id="txt-avg">Ticket Médio</div>
+                        <div style="font-weight: bold;" id="val-avg">$ 0.00</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.875rem; opacity: 0.7;" id="txt-total">Total</div>
+                        <div style="font-weight: bold;" id="val-total">0</div>
+                    </div>
                 </div>
-                <div>
-                    <div style="font-size: 0.875rem; opacity: 0.7;" id="txt-avg">Ticket Médio</div>
-                    <div style="font-weight: bold;" id="val-avg">$ 0.00</div>
-                </div>
-                <div>
-                    <div style="font-size: 0.875rem; opacity: 0.7;" id="txt-total">Total</div>
-                    <div style="font-weight: bold;" id="val-total">0</div>
-                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">📊 <span id="txt-distribution">Distribuição</span></h2>
+                <canvas id="chartCanvas" width="300" height="300"></canvas>
+                <div id="chartLegend" class="chart-legend"></div>
+                <div id="no-chart" style="text-align: center; padding: 3rem; opacity: 0.5;">Sem dados</div>
             </div>
         </div>
 
@@ -176,26 +192,41 @@ let state = {
     dark: true,
     txs: [],
     goal: 3000,
-    equity: 0
+    equity: 0,
+    editingGoal: false,
+    editingEquity: false
 };
 
 // Traduções
 const t = {
-    'pt-br': { title: 'Computabilis', subtitle: 'Sistema profissional', income: 'Receitas', expense: 'Despesas', balance: 'Saldo', goal: 'Meta Mensal (clique)', equity: 'Patrimônio (clique)', stats: 'Estatísticas', add: 'Adicionar', date: 'Data', type: 'Tipo', category: 'Categoria', value: 'Valor', desc: 'Descrição', csv: 'CSV', pdf: 'PDF', import: 'Importar', txs: 'Lançamentos', noTxs: 'Nenhum lançamento', freq: 'Categoria + Frequente', avg: 'Ticket Médio', total: 'Total', receita: 'Receita', despesa: 'Despesa' },
-    'en': { title: 'Computabilis', subtitle: 'Professional system', income: 'Income', expense: 'Expenses', balance: 'Balance', goal: 'Monthly Goal (click)', equity: 'Equity (click)', stats: 'Statistics', add: 'Add', date: 'Date', type: 'Type', category: 'Category', value: 'Value', desc: 'Description', csv: 'CSV', pdf: 'PDF', import: 'Import', txs: 'Transactions', noTxs: 'No transactions', freq: 'Most Frequent', avg: 'Avg Ticket', total: 'Total', receita: 'Income', despesa: 'Expense' },
-    'es': { title: 'Computabilis', subtitle: 'Sistema profesional', income: 'Ingresos', expense: 'Gastos', balance: 'Saldo', goal: 'Meta Mensual (clic)', equity: 'Patrimonio (clic)', stats: 'Estadísticas', add: 'Agregar', date: 'Fecha', type: 'Tipo', category: 'Categoría', value: 'Valor', desc: 'Descripción', csv: 'CSV', pdf: 'PDF', import: 'Importar', txs: 'Transacciones', noTxs: 'Sin transacciones', freq: 'Más Frecuente', avg: 'Ticket Promedio', total: 'Total', receita: 'Ingreso', despesa: 'Gasto' }
+    'pt-br': { title: 'Computabilis', subtitle: 'Sistema profissional', income: 'Receitas', expense: 'Despesas', balance: 'Saldo', goal: 'Meta Mensal (clique)', equity: 'Patrimônio (clique)', stats: 'Estatísticas', distribution: 'Distribuição', add: 'Adicionar', date: 'Data', type: 'Tipo', category: 'Categoria', value: 'Valor', desc: 'Descrição', csv: 'CSV', pdf: 'PDF', import: 'Importar', txs: 'Lançamentos', noTxs: 'Nenhum lançamento', freq: 'Categoria + Frequente', avg: 'Ticket Médio', total: 'Total', receita: 'Receita', despesa: 'Despesa' },
+    'en': { title: 'Computabilis', subtitle: 'Professional system', income: 'Income', expense: 'Expenses', balance: 'Balance', goal: 'Monthly Goal (click)', equity: 'Equity (click)', stats: 'Statistics', distribution: 'Distribution', add: 'Add', date: 'Date', type: 'Type', category: 'Category', value: 'Value', desc: 'Description', csv: 'CSV', pdf: 'PDF', import: 'Import', txs: 'Transactions', noTxs: 'No transactions', freq: 'Most Frequent', avg: 'Avg Ticket', total: 'Total', receita: 'Income', despesa: 'Expense' },
+    'es': { title: 'Computabilis', subtitle: 'Sistema profesional', income: 'Ingresos', expense: 'Gastos', balance: 'Saldo', goal: 'Meta Mensual (clic)', equity: 'Patrimonio (clic)', stats: 'Estadísticas', distribution: 'Distribución', add: 'Agregar', date: 'Fecha', type: 'Tipo', category: 'Categoría', value: 'Valor', desc: 'Descripción', csv: 'CSV', pdf: 'PDF', import: 'Importar', txs: 'Transacciones', noTxs: 'Sin transacciones', freq: 'Más Frecuente', avg: 'Ticket Promedio', total: 'Total', receita: 'Ingreso', despesa: 'Gasto' }
 };
 
-const cats = ['Academia', 'Água', 'Aluguel', 'Beleza', 'Combustível', 'Cursos', 'Delivery', 'Educação', 'Farmácia', 'Gás', 'Higiene Pessoal', 'Hobbies', 'Internet', 'Investimentos', 'Lazer', 'Livros', 'Luz', 'Moradia', 'Outros', 'Restaurante', 'Roupas', 'Saúde', 'Salário', 'Supermercado', 'Telefone', 'Transporte', 'Uber/Taxi'];
+// Categorias com traduções
+const categories = {
+    'pt-br': ['Academia', 'Água', 'Aluguel', 'Beleza', 'Combustível', 'Cursos', 'Delivery', 'Educação', 'Farmácia', 'Gás', 'Higiene Pessoal', 'Hobbies', 'Internet', 'Investimentos', 'Lazer', 'Livros', 'Luz', 'Moradia', 'Outros', 'Restaurante', 'Roupas', 'Saúde', 'Salário', 'Supermercado', 'Telefone', 'Transporte', 'Uber/Taxi'],
+    'en': ['Gym', 'Water', 'Rent', 'Beauty', 'Fuel', 'Courses', 'Delivery', 'Education', 'Pharmacy', 'Gas', 'Personal Hygiene', 'Hobbies', 'Internet', 'Investments', 'Leisure', 'Books', 'Electricity', 'Housing', 'Other', 'Restaurant', 'Clothing', 'Health', 'Salary', 'Supermarket', 'Phone', 'Transport', 'Uber/Taxi'],
+    'es': ['Gimnasio', 'Agua', 'Alquiler', 'Belleza', 'Combustible', 'Cursos', 'Delivery', 'Educación', 'Farmacia', 'Gas', 'Higiene Personal', 'Hobbies', 'Internet', 'Inversiones', 'Ocio', 'Libros', 'Luz', 'Vivienda', 'Otros', 'Restaurante', 'Ropa', 'Salud', 'Salario', 'Supermercado', 'Teléfono', 'Transporte', 'Uber/Taxi']
+};
+
+const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444', '#14b8a6', '#6366f1', '#84cc16', '#f97316'];
 
 // Init
 document.getElementById('form-date').value = new Date().toISOString().split('T')[0];
-cats.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c;
-    opt.textContent = c;
-    document.getElementById('form-category').appendChild(opt);
-});
+updateCategoryOptions();
+
+function updateCategoryOptions() {
+    const select = document.getElementById('form-category');
+    select.innerHTML = '';
+    categories[state.lang].forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        select.appendChild(opt);
+    });
+}
 
 // Funções
 function calcTotals() {
@@ -206,10 +237,86 @@ function calcTotals() {
     }, { income: 0, expense: 0 });
 }
 
+function drawPieChart() {
+    const canvas = document.getElementById('chartCanvas');
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = Math.min(centerX, centerY) - 20;
+
+    // Calcula dados para despesas
+    const categoryData = state.txs
+        .filter(t => t.type === 'despesa')
+        .reduce((acc, t) => {
+            acc[t.category] = (acc[t.category] || 0) + parseFloat(t.value);
+            return acc;
+        }, {});
+
+    const data = Object.entries(categoryData)
+        .map(([name, value]) => ({ name, value }))
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 10);
+
+    if (data.length === 0) {
+        document.getElementById('no-chart').classList.remove('hidden');
+        document.getElementById('chartCanvas').classList.add('hidden');
+        document.getElementById('chartLegend').classList.add('hidden');
+        return;
+    }
+
+    document.getElementById('no-chart').classList.add('hidden');
+    document.getElementById('chartCanvas').classList.remove('hidden');
+    document.getElementById('chartLegend').classList.remove('hidden');
+
+    // Limpa canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Calcula total
+    const total = data.reduce((sum, d) => sum + d.value, 0);
+
+    // Desenha pizza
+    let startAngle = -Math.PI / 2;
+    data.forEach((d, i) => {
+        const sliceAngle = (d.value / total) * 2 * Math.PI;
+        const endAngle = startAngle + sliceAngle;
+
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = COLORS[i % COLORS.length];
+        ctx.fill();
+
+        // Borda
+        ctx.strokeStyle = state.dark ? '#1e1b4b' : '#fff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        startAngle = endAngle;
+    });
+
+    // Atualiza legenda
+    const legend = document.getElementById('chartLegend');
+    legend.innerHTML = '';
+    data.forEach((d, i) => {
+        const item = document.createElement('div');
+        item.className = 'legend-item';
+        const percent = ((d.value / total) * 100).toFixed(1);
+        item.innerHTML = `
+            <div class="legend-color" style="background: ${COLORS[i % COLORS.length]}"></div>
+            <span>${d.name}: ${percent}%</span>
+        `;
+        legend.appendChild(item);
+    });
+}
+
 function updateUI() {
     const txt = t[state.lang];
     const totals = calcTotals();
     const balance = totals.income - totals.expense;
+    
+    // Atualiza categorias
+    updateCategoryOptions();
     
     // Textos
     document.getElementById('title').textContent = txt.title;
@@ -220,6 +327,7 @@ function updateUI() {
     document.getElementById('txt-goal').textContent = txt.goal;
     document.getElementById('txt-equity').textContent = txt.equity;
     document.getElementById('txt-stats').textContent = txt.stats;
+    document.getElementById('txt-distribution').textContent = txt.distribution;
     document.getElementById('txt-add').textContent = txt.add;
     document.getElementById('txt-import').textContent = txt.import;
     document.getElementById('txt-txs').textContent = txt.txs;
@@ -232,6 +340,7 @@ function updateUI() {
     document.getElementById('th-desc').textContent = txt.desc;
     document.getElementById('th-value').textContent = txt.value;
     document.getElementById('no-txs').textContent = txt.noTxs;
+    document.getElementById('no-chart').textContent = txt.noTxs;
     document.getElementById('form-value').placeholder = txt.value;
     document.getElementById('form-desc').placeholder = txt.desc;
     document.getElementById('form-type').innerHTML = `<option value="despesa">${txt.despesa}</option><option value="receita">${txt.receita}</option>`;
@@ -251,6 +360,9 @@ function updateUI() {
     const avg = state.txs.length ? (totals.income + totals.expense) / state.txs.length : 0;
     document.getElementById('val-avg').textContent = '$ ' + avg.toFixed(2);
     document.getElementById('val-total').textContent = state.txs.length;
+    
+    // Gráfico
+    drawPieChart();
     
     // Tabela
     const tbody = document.getElementById('tbody');
@@ -277,9 +389,18 @@ function updateUI() {
     
     // Theme
     document.getElementById('body').className = state.dark ? 'bg-dark' : 'bg-light';
-    document.querySelectorAll('.card').forEach(c => c.className = state.dark ? 'card' : 'card card-light');
-    document.querySelectorAll('input, select').forEach(i => i.className = state.dark ? '' : 'input-light');
-    document.getElementById('table').className = state.dark ? '' : 'table-light';
+    document.querySelectorAll('.card').forEach(c => {
+        if (c.classList.contains('card-light')) c.classList.remove('card-light');
+        if (!state.dark) c.classList.add('card-light');
+    });
+    document.querySelectorAll('input, select').forEach(i => {
+        if (i.classList.contains('input-light')) i.classList.remove('input-light');
+        if (!state.dark) i.classList.add('input-light');
+    });
+    if (document.getElementById('table').classList.contains('table-light')) {
+        document.getElementById('table').classList.remove('table-light');
+    }
+    if (!state.dark) document.getElementById('table').classList.add('table-light');
     document.getElementById('theme-btn').textContent = state.dark ? '☀️' : '🌙';
 }
 
@@ -308,30 +429,94 @@ function deleteTx(id) {
 }
 
 function exportCSV() {
-    if (!state.txs.length) return alert(t[state.lang].noTxs);
-    const csv = [['Data', 'Tipo', 'Categoria', 'Valor', 'Descrição'], ...state.txs.map(t => [t.date, t.type, t.category, t.value, t.description])].map(r => r.join(',')).join('\n');
+    console.log('Exportando CSV...', state.txs.length);
+    if (!state.txs.length) {
+        alert(t[state.lang].noTxs);
+        return;
+    }
+    
+    const csv = [
+        ['Data', 'Tipo', 'Categoria', 'Valor', 'Descrição'],
+        ...state.txs.map(tx => [tx.date, tx.type, tx.category, tx.value, tx.description || ''])
+    ].map(row => row.join(',')).join('\n');
+    
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `computabilis_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    console.log('CSV exportado!');
 }
 
 function exportPDF() {
-    if (!state.txs.length) return alert(t[state.lang].noTxs);
+    console.log('Exportando PDF...', state.txs.length);
+    if (!state.txs.length) {
+        alert(t[state.lang].noTxs);
+        return;
+    }
+    
     const txt = t[state.lang];
     const totals = calcTotals();
     const balance = totals.income - totals.expense;
-    const html = `<html><head><meta charset="UTF-8"><title>Relatório</title><style>body{font-family:Arial;padding:30px;max-width:1000px;margin:0 auto}h1{color:#8b5cf6;text-align:center}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #ddd;padding:10px;text-align:left}th{background:#8b5cf6;color:white}tr:nth-child(even){background:#f9f9f9}</style></head><body><h1>💰 Computabilis</h1><p style="text-align:center">${new Date().toLocaleDateString()}</p><h2>Resumo</h2><p>${txt.income}: $ ${totals.income.toFixed(2)}</p><p>${txt.expense}: $ ${totals.expense.toFixed(2)}</p><p>${txt.balance}: $ ${balance.toFixed(2)}</p><h2>${txt.txs}</h2><table><tr><th>${txt.date}</th><th>${txt.type}</th><th>${txt.category}</th><th>${txt.desc}</th><th>${txt.value}</th></tr>${state.txs.map(e => `<tr><td>${e.date}</td><td>${e.type}</td><td>${e.category}</td><td>${e.description || '-'}</td><td>$ ${parseFloat(e.value).toFixed(2)}</td></tr>`).join('')}</table><p style="text-align:center;margin-top:40px">Pressione Ctrl+P para salvar como PDF</p></body></html>`;
-    const blob = new Blob([html], { type: 'text/html' });
+    
+    const html = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Relatório Computabilis</title>
+<style>
+body{font-family:Arial,sans-serif;padding:30px;max-width:1000px;margin:0 auto;background:#fff;color:#000}
+h1{color:#8b5cf6;text-align:center;margin-bottom:10px}
+h2{color:#333;border-bottom:2px solid #8b5cf6;padding-bottom:5px;margin-top:30px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+th,td{border:1px solid #ddd;padding:10px;text-align:left}
+th{background:#8b5cf6;color:white;font-weight:bold}
+tr:nth-child(even){background:#f9f9f9}
+.summary{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:20px;border-radius:10px;margin:20px 0}
+.summary-item{display:inline-block;width:32%;margin:10px 0;text-align:center}
+.summary-item strong{display:block;font-size:12px;opacity:0.9;margin-bottom:5px}
+.summary-item .value{font-size:24px;font-weight:bold}
+.footer{text-align:center;margin-top:40px;padding-top:20px;border-top:2px solid #eee;color:#999;font-size:12px}
+</style></head><body>
+<h1>💰 Computabilis</h1>
+<p style="text-align:center"><strong>Gerado em:</strong> ${new Date().toLocaleDateString()}</p>
+<div class="summary">
+<h2 style="color:white;border:none;margin-top:0">Resumo Financeiro</h2>
+<div class="summary-item"><strong>${txt.income}</strong><div class="value">$ ${totals.income.toFixed(2)}</div></div>
+<div class="summary-item"><strong>${txt.expense}</strong><div class="value">$ ${totals.expense.toFixed(2)}</div></div>
+<div class="summary-item"><strong>${txt.balance}</strong><div class="value">$ ${balance.toFixed(2)}</div></div>
+</div>
+<h2>${txt.txs} (${state.txs.length})</h2>
+<table><thead><tr>
+<th>${txt.date}</th><th>${txt.type}</th><th>${txt.category}</th><th>${txt.desc}</th><th>${txt.value}</th>
+</tr></thead><tbody>
+${state.txs.sort((a, b) => new Date(b.date) - new Date(a.date)).map(tx => 
+    `<tr>
+    <td>${tx.date}</td>
+    <td><span style="padding:4px 8px;border-radius:4px;font-size:12px;background:${tx.type === 'receita' ? '#d1fae5' : '#fee2e2'};color:${tx.type === 'receita' ? '#065f46' : '#991b1b'}">${tx.type === 'receita' ? txt.receita : txt.despesa}</span></td>
+    <td>${tx.category}</td>
+    <td>${tx.description || '-'}</td>
+    <td style="text-align:right;font-weight:bold;color:${tx.type === 'receita' ? '#059669' : '#dc2626'}">$ ${parseFloat(tx.value).toFixed(2)}</td>
+    </tr>`
+).join('')}
+</tbody></table>
+<div class="footer">
+<p>Gerado por <strong>Computabilis</strong> - Sistema Profissional de Gestão Financeira</p>
+<p><strong>Instruções:</strong> Pressione Ctrl+P (ou Cmd+P no Mac) e escolha "Salvar como PDF"</p>
+</div>
+</body></html>`;
+    
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `computabilis_${new Date().toISOString().split('T')[0]}.html`;
+    a.download = `computabilis_relatorio_${new Date().toISOString().split('T')[0]}.html`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    console.log('PDF exportado!');
 }
 
 // Events
@@ -341,36 +526,79 @@ document.getElementById('btn-add').addEventListener('click', addTx);
 document.getElementById('btn-csv').addEventListener('click', exportCSV);
 document.getElementById('btn-pdf').addEventListener('click', exportPDF);
 
-document.getElementById('card-goal').addEventListener('click', () => {
-    const input = document.getElementById('input-goal');
-    const val = document.getElementById('val-goal');
+// Meta e Patrimônio - CORRIGIDO
+document.getElementById('card-goal').addEventListener('click', function(e) {
+    if (state.editingGoal) return;
+    state.editingGoal = true;
+    const valEl = document.getElementById('val-goal');
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.step = '0.01';
     input.value = state.goal;
-    input.classList.remove('hidden');
-    val.classList.add('hidden');
+    input.className = state.dark ? 'edit-input' : 'edit-input input-light';
+    input.style.fontSize = '1.5rem';
+    input.style.fontWeight = 'bold';
+    input.style.width = '100%';
+    
+    valEl.style.display = 'none';
+    this.appendChild(input);
     input.focus();
+    input.select();
+    
+    const save = () => {
+        state.goal = parseFloat(input.value) || 3000;
+        input.remove();
+        valEl.style.display = 'block';
+        state.editingGoal = false;
+        updateUI();
+    };
+    
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') save();
+        if (e.key === 'Escape') {
+            input.remove();
+            valEl.style.display = 'block';
+            state.editingGoal = false;
+        }
+    });
 });
 
-document.getElementById('input-goal').addEventListener('blur', e => {
-    state.goal = parseFloat(e.target.value) || 3000;
-    e.target.classList.add('hidden');
-    document.getElementById('val-goal').classList.remove('hidden');
-    updateUI();
-});
-
-document.getElementById('card-equity').addEventListener('click', () => {
-    const input = document.getElementById('input-equity');
-    const val = document.getElementById('val-equity');
+document.getElementById('card-equity').addEventListener('click', function(e) {
+    if (state.editingEquity) return;
+    state.editingEquity = true;
+    const valEl = document.getElementById('val-equity');
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.step = '0.01';
     input.value = state.equity;
-    input.classList.remove('hidden');
-    val.classList.add('hidden');
+    input.className = state.dark ? 'edit-input' : 'edit-input input-light';
+    input.style.fontSize = '1.5rem';
+    input.style.fontWeight = 'bold';
+    input.style.width = '100%';
+    
+    valEl.style.display = 'none';
+    this.appendChild(input);
     input.focus();
-});
-
-document.getElementById('input-equity').addEventListener('blur', e => {
-    state.equity = parseFloat(e.target.value) || 0;
-    e.target.classList.add('hidden');
-    document.getElementById('val-equity').classList.remove('hidden');
-    updateUI();
+    input.select();
+    
+    const save = () => {
+        state.equity = parseFloat(input.value) || 0;
+        input.remove();
+        valEl.style.display = 'block';
+        state.editingEquity = false;
+        updateUI();
+    };
+    
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') save();
+        if (e.key === 'Escape') {
+            input.remove();
+            valEl.style.display = 'block';
+            state.editingEquity = false;
+        }
+    });
 });
 
 document.getElementById('file-import').addEventListener('change', e => {
@@ -401,9 +629,15 @@ document.getElementById('file-import').addEventListener('change', e => {
 // Init
 updateUI();
 
-// PWA
+// PWA - Service Worker
+// NOTA: O erro 404 do SW é NORMAL quando testando em claudeusercontent.com
+// No GitHub Pages vai funcionar perfeitamente!
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('✅ Service Worker registrado'))
+            .catch(err => console.log('⚠️ SW erro (normal em preview):', err.message));
+    });
 }
 </script>
 </body>

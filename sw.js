@@ -1,8 +1,8 @@
 const CACHE_NAME = 'computabilis-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json'
+  './',
+  './index.html',
+  './manifest.json'
 ];
 
 // Instalação do Service Worker
@@ -39,17 +39,21 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
+        // Cache hit - retorna a resposta do cache
         if (response) {
           return response;
         }
         
+        // Clona a requisição
         const fetchRequest = event.request.clone();
         
         return fetch(fetchRequest).then((response) => {
+          // Verifica se é uma resposta válida
           if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }
           
+          // Clona a resposta
           const responseToCache = response.clone();
           
           caches.open(CACHE_NAME)
@@ -58,6 +62,9 @@ self.addEventListener('fetch', (event) => {
             });
           
           return response;
+        }).catch(() => {
+          // Se falhar, tenta retornar do cache
+          return caches.match('./index.html');
         });
       })
   );
