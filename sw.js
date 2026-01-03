@@ -1,30 +1,31 @@
-const CACHE_NAME = 'computabilis-v1';
+const CACHE_VERSION = '3.0.0';
+const CACHE_NAME = `computabilis-${CACHE_VERSION}`;
 const urlsToCache = [
   './',
   './index.html',
+  './style.css',
   './manifest.json'
 ];
 
-// Instalação do Service Worker
 self.addEventListener('install', (event) => {
+  console.log('[SW] Installing...');
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('✅ Cache aberto');
-        return cache.addAll(urlsToCache);
-      })
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('[SW] Cache opened:', CACHE_NAME);
+      return cache.addAll(urlsToCache);
+    })
   );
   self.skipWaiting();
 });
 
-// Ativação do Service Worker
 self.addEventListener('activate', (event) => {
+  console.log('[SW] Activating...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('🗑️ Removendo cache antigo:', cacheName);
+          if (cacheName !== CACHE_NAME && cacheName.startsWith('computabilis-')) {
+            console.log('[SW] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -34,38 +35,33 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Interceptar requisições
 self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  if (request.method !== 'GET' || url.origin !== location.origin) {
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Cache hit - retorna a resposta do cache
-        if (response) {
-          return response;
-        }
+    caches.match(request).then((response) => {
+      if (response) return response;
+      
+      return fetch(request).then((response) => {
+        if (!response || response.status !== 200) return response;
         
-        // Clona a requisição
-        const fetchRequest = event.request.clone();
-        
-        return fetch(fetchRequest).then((response) => {
-          // Verifica se é uma resposta válida
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-          
-          // Clona a resposta
-          const responseToCache = response.clone();
-          
-          caches.open(CACHE_NAME)
-            .then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-          
-          return response;
-        }).catch(() => {
-          // Se falhar, tenta retornar do cache
-          return caches.match('./index.html');
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(request, responseToCache);
         });
-      })
+        return response;
+      }).catch(() => caches.match(request));
+    })
   );
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
