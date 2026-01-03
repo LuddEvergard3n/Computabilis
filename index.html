@@ -8,66 +8,19 @@
     <title>Computabilis - Sistema Profissional</title>
     
     <link rel="manifest" href="./manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◆</text></svg>">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, sans-serif; transition: background 0.3s; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
-        .card { background: rgba(0,0,0,0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; padding: 1.5rem; margin-bottom: 1rem; }
-        .card-light { background: rgba(255,255,255,0.8); border: 1px solid rgba(139,92,246,0.2); }
-        .bg-dark { background: linear-gradient(135deg, #1e1b4b 0%, #581c87 50%, #1e1b4b 100%); color: white; min-height: 100vh; }
-        .bg-light { background: linear-gradient(135deg, #faf5ff 0%, #fce7f3 50%, #dbeafe 100%); color: #1f2937; min-height: 100vh; }
-        .grid { display: grid; gap: 1rem; }
-        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: transform 0.2s; font-size: 1rem; }
-        .btn:hover { transform: scale(1.05); }
-        .btn-primary { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; }
-        .btn-green { background: #10b981; color: white; }
-        .btn-red { background: #ef4444; color: white; }
-        .btn-blue { background: #3b82f6; color: white; }
-        input, select { padding: 0.75rem; border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.2); background: #000; color: #fff; width: 100%; font-size: 1rem; }
-        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
-        .input-light { background: #fff; color: #000; border: 1px solid #d1d5db; }
-        .input-light[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0); }
-        .text-green { color: #10b981; }
-        .text-red { color: #ef4444; }
-        .text-blue { color: #3b82f6; }
-        .text-purple { color: #8b5cf6; }
-        .text-yellow { color: #f59e0b; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-        .logo { display: flex; align-items: center; gap: 1rem; }
-        .emoji { width: 48px; height: 48px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .table-light th, .table-light td { border-bottom: 1px solid rgba(0,0,0,0.1); }
-        th { font-weight: 600; opacity: 0.7; font-size: 0.875rem; }
-        .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; }
-        .badge-green { background: rgba(16,185,129,0.2); color: #10b981; }
-        .badge-red { background: rgba(239,68,68,0.2); color: #ef4444; }
-        .clickable { cursor: pointer; transition: transform 0.2s; }
-        .clickable:hover { transform: scale(1.05); }
-        .hidden { display: none !important; }
-        #chartCanvas { max-width: 400px; max-height: 400px; margin: 0 auto; display: block; }
-        .chart-legend { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 1rem; }
-        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
-        .legend-color { width: 16px; height: 16px; border-radius: 4px; }
-        .edit-input { background: rgba(139,92,246,0.2) !important; border: 2px solid #8b5cf6 !important; }
-        @media (max-width: 768px) {
-            .grid-3, .grid-2 { grid-template-columns: 1fr; }
-            input, select, .btn { font-size: 16px; }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body id="body" class="bg-dark">
     <div class="container">
         <!-- Header -->
         <div class="header">
             <div class="logo">
-                <div class="emoji">💰</div>
+                <div class="emoji">◆</div>
                 <div>
                     <h1 style="font-size: 2rem; font-weight: bold;" id="title">Computabilis</h1>
                     <p style="font-size: 0.875rem; opacity: 0.7;" id="subtitle">Sistema profissional</p>
@@ -79,22 +32,22 @@
                     <option value="en">🇺🇸 EN</option>
                     <option value="es">🇪🇸 ES</option>
                 </select>
-                <button id="theme-btn" class="btn btn-primary">☀️</button>
+                <button id="theme-btn" type="button" class="btn btn-theme" aria-pressed="false">◉</button>
             </div>
         </div>
 
         <!-- Cards Resumo -->
         <div class="grid grid-3">
             <div class="card" id="card-income">
-                <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;">📈 <span id="txt-income">Receitas</span></div>
+                <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;">⬆ <span id="txt-income">Receitas</span></div>
                 <div class="text-green" style="font-size: 2rem; font-weight: bold;" id="val-income">$ 0.00</div>
             </div>
             <div class="card" id="card-expense">
-                <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;">📉 <span id="txt-expense">Despesas</span></div>
+                <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;">⬇ <span id="txt-expense">Despesas</span></div>
                 <div class="text-red" style="font-size: 2rem; font-weight: bold;" id="val-expense">$ 0.00</div>
             </div>
             <div class="card" id="card-balance">
-                <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;">💰 <span id="txt-balance">Saldo</span></div>
+                <div style="font-size: 0.875rem; opacity: 0.7; margin-bottom: 0.5rem;">⚖ <span id="txt-balance">Saldo</span></div>
                 <div class="text-blue" style="font-size: 2rem; font-weight: bold;" id="val-balance">$ 0.00</div>
             </div>
         </div>
@@ -114,7 +67,7 @@
         <!-- Estatísticas e Gráfico -->
         <div class="grid grid-2">
             <div class="card">
-                <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">📊 <span id="txt-stats">Estatísticas</span></h2>
+                <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">≡ <span id="txt-stats">Estatísticas</span></h2>
                 <div class="grid" style="gap: 0.75rem;">
                     <div>
                         <div style="font-size: 0.875rem; opacity: 0.7;" id="txt-freq">Categoria + Frequente</div>
@@ -132,40 +85,55 @@
             </div>
 
             <div class="card">
-                <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">📊 <span id="txt-distribution">Distribuição</span></h2>
-                <canvas id="chartCanvas" width="300" height="300"></canvas>
-                <div id="chartLegend" class="chart-legend"></div>
-                <div id="no-chart" style="text-align: center; padding: 3rem; opacity: 0.5;">Sem dados</div>
+                <h3 class="chart-title">Distribuição — Pizza</h3>
+                <div class="chart-canvas-wrap" style="height:300px;"><canvas id="chartPie"></canvas></div>
+                <div id="chartPieLegend" class="chart-legend"></div>
+                <div id="no-chart-pie" class="no-data hidden" style="text-align:center; padding:1.25rem; opacity:0.6;">Sem dados</div>
+            </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:1rem;">
+            <div class="card">
+                <h3 class="chart-title">Barra</h3>
+                <div class="chart-canvas-wrap" style="height:250px;"><canvas id="chartBar"></canvas></div>
+                <div id="chartBarLegend" class="chart-legend"></div>
+                <div id="no-chart-bar" class="no-data hidden" style="text-align:center; padding:1.25rem; opacity:0.6;">Sem dados</div>
+            </div>
+            <div class="card">
+                <h3 class="chart-title">Linha</h3>
+                <div class="chart-canvas-wrap" style="height:250px;"><canvas id="chartLine"></canvas></div>
+                <div id="chartLineLegend" class="chart-legend"></div>
+                <div id="no-chart-line" class="no-data hidden" style="text-align:center; padding:1.25rem; opacity:0.6;">Sem dados</div>
             </div>
         </div>
 
         <!-- Formulário -->
         <div class="card">
-            <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">➕ <span id="txt-add">Adicionar</span></h2>
+            <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">⊕ <span id="txt-add">Adicionar</span></h2>
             <div class="grid grid-2">
                 <input type="date" id="form-date">
                 <select id="form-type">
                     <option value="despesa">Despesa</option>
                     <option value="receita">Receita</option>
                 </select>
-                <select id="form-category"></select>
+                <select id="form-category" aria-label="Categoria"></select>
                 <input type="number" step="0.01" id="form-value" placeholder="Valor">
                 <input type="text" id="form-desc" placeholder="Descrição" style="grid-column: 1 / -1;">
             </div>
             <div class="grid grid-2" style="margin-top: 1rem;">
-                <button id="btn-add" class="btn btn-primary">+ Adicionar</button>
+                <button id="btn-add" type="button" class="btn btn-primary">+ Adicionar</button>
                 <label class="btn btn-blue" style="text-align: center; display: flex; align-items: center; justify-content: center;">
                     <span id="txt-import">Importar</span>
                     <input type="file" id="file-import" accept=".csv" style="display: none;">
                 </label>
-                <button id="btn-csv" class="btn btn-green">📥 CSV</button>
-                <button id="btn-pdf" class="btn btn-red">📄 PDF</button>
+                <button id="btn-csv" type="button" class="btn btn-green">⬇ CSV</button>
+                <button id="btn-pdf" type="button" class="btn btn-red">▤ PDF</button>
             </div>
         </div>
 
         <!-- Tabela -->
         <div class="card">
-            <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">📋 <span id="txt-txs">Lançamentos</span> (<span id="count-txs">0</span>)</h2>
+            <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: bold;">§ <span id="txt-txs">Lançamentos</span> (<span id="count-txs">0</span>)</h2>
             <div style="overflow-x: auto;">
                 <table id="table">
                     <thead>
@@ -175,7 +143,7 @@
                             <th id="th-category">Categoria</th>
                             <th id="th-desc">Descrição</th>
                             <th id="th-value">Valor</th>
-                            <th>🗑️</th>
+                            <th>✕</th>
                         </tr>
                     </thead>
                     <tbody id="tbody"></tbody>
@@ -185,6 +153,7 @@
         </div>
     </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 // Estado
 let state = {
@@ -196,6 +165,19 @@ let state = {
     editingGoal: false,
     editingEquity: false
 };
+let chartPie, chartBar, chartLine;
+
+// Development helper: unregister any existing service workers to avoid stale cached scripts
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations()
+        .then(regs => regs.forEach(r => r.unregister().then(() => console.log('Dev: service worker unregistered'))))
+        .catch(() => {});
+}
+
+// Global error handler to surface syntax/runtime errors early
+window.addEventListener('error', e => {
+    console.error('Global Error:', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
+});
 
 // Traduções
 const t = {
@@ -220,7 +202,13 @@ updateCategoryOptions();
 function updateCategoryOptions() {
     const select = document.getElementById('form-category');
     select.innerHTML = '';
-    categories[state.lang].forEach(c => {
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = state.lang === 'en' ? 'Select category' : state.lang === 'es' ? 'Seleccione categoría' : 'Selecione a categoria';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    select.appendChild(placeholder);
+    (categories[state.lang] || []).forEach(c => {
         const opt = document.createElement('option');
         opt.value = c;
         opt.textContent = c;
@@ -237,76 +225,124 @@ function calcTotals() {
     }, { income: 0, expense: 0 });
 }
 
-function drawPieChart() {
-    const canvas = document.getElementById('chartCanvas');
-    const ctx = canvas.getContext('2d');
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = Math.min(centerX, centerY) - 20;
-
-    // Calcula dados para despesas
+function drawCharts() {
+    // Dados por categoria (despesas)
     const categoryData = state.txs
         .filter(t => t.type === 'despesa')
-        .reduce((acc, t) => {
-            acc[t.category] = (acc[t.category] || 0) + parseFloat(t.value);
-            return acc;
-        }, {});
+        .reduce((acc, t) => { acc[t.category] = (acc[t.category] || 0) + parseFloat(t.value); return acc; }, {});
 
-    const data = Object.entries(categoryData)
-        .map(([name, value]) => ({ name, value }))
-        .sort((a, b) => b.value - a.value)
-        .slice(0, 10);
+    const data = Object.entries(categoryData).map(([name, value]) => ({ name, value }))
+        .sort((a, b) => b.value - a.value).slice(0, 10);
 
     if (data.length === 0) {
-        document.getElementById('no-chart').classList.remove('hidden');
-        document.getElementById('chartCanvas').classList.add('hidden');
-        document.getElementById('chartLegend').classList.add('hidden');
+        // show per-chart no-data and hide canvases
+        document.getElementById('no-chart-pie').classList.remove('hidden');
+        document.getElementById('no-chart-bar').classList.remove('hidden');
+        document.getElementById('no-chart-line').classList.remove('hidden');
+        ['chartPie','chartBar','chartLine'].forEach(id => document.getElementById(id).classList.add('hidden'));
+        ['chartPieLegend','chartBarLegend','chartLineLegend'].forEach(id => document.getElementById(id).classList.add('hidden'));
+        if (chartPie) { chartPie.destroy(); chartPie = null; }
+        if (chartBar) { chartBar.destroy(); chartBar = null; }
+        if (chartLine) { chartLine.destroy(); chartLine = null; }
         return;
     }
 
-    document.getElementById('no-chart').classList.add('hidden');
-    document.getElementById('chartCanvas').classList.remove('hidden');
-    document.getElementById('chartLegend').classList.remove('hidden');
+    // hide no-data placeholders and show canvases
+    document.getElementById('no-chart-pie').classList.add('hidden');
+    document.getElementById('no-chart-bar').classList.add('hidden');
+    document.getElementById('no-chart-line').classList.add('hidden');
+    ['chartPie','chartBar','chartLine'].forEach(id => document.getElementById(id).classList.remove('hidden'));
+    ['chartPieLegend','chartBarLegend','chartLineLegend'].forEach(id => document.getElementById(id).classList.remove('hidden'));
 
-    // Limpa canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const labels = data.map(d => d.name);
+    const values = data.map(d => d.value);
+    const colors = labels.map((_, i) => COLORS[i % COLORS.length]);
 
-    // Calcula total
-    const total = data.reduce((sum, d) => sum + d.value, 0);
+    // Pie / Doughnut
+    const pieCtx = document.getElementById('chartPie').getContext('2d');
+    if (chartPie) {
+        chartPie.data.labels = labels;
+        chartPie.data.datasets[0].data = values;
+        chartPie.data.datasets[0].backgroundColor = colors;
+        chartPie.update();
+    } else {
+        chartPie = new Chart(pieCtx, {
+            type: 'doughnut',
+            data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 0 }] },
+            options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+        });
+    }
 
-    // Desenha pizza
-    let startAngle = -Math.PI / 2;
-    data.forEach((d, i) => {
-        const sliceAngle = (d.value / total) * 2 * Math.PI;
-        const endAngle = startAngle + sliceAngle;
+    // Bar chart (categories) - single dataset with array of colors for each bar
+    const barCtx = document.getElementById('chartBar').getContext('2d');
+    if (chartBar) {
+        chartBar.data.labels = labels;
+        chartBar.data.datasets[0].data = values;
+        chartBar.data.datasets[0].backgroundColor = colors;
+        chartBar.update();
+    } else {
+        chartBar = new Chart(barCtx, {
+            type: 'bar',
+            data: { 
+                labels, 
+                datasets: [{ 
+                    label: 'Despesas por Categoria', 
+                    data: values, 
+                    backgroundColor: colors,
+                    borderWidth: 0
+                }] 
+            },
+            options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } }, maintainAspectRatio: false }
+        });
+    }
 
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-        ctx.closePath();
-        ctx.fillStyle = COLORS[i % COLORS.length];
-        ctx.fill();
-
-        // Borda
-        ctx.strokeStyle = state.dark ? '#1e1b4b' : '#fff';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        startAngle = endAngle;
+    // Line chart (últimos 6 meses - resultado líquido)
+    const monthsMap = {};
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        monthsMap[key] = 0;
+    }
+    state.txs.forEach(tx => {
+        const d = new Date(tx.date);
+        if (isNaN(d)) return;
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        if (!(key in monthsMap)) return;
+        monthsMap[key] += (tx.type === 'receita' ? parseFloat(tx.value) : -parseFloat(tx.value));
     });
+    const monthLabels = Object.keys(monthsMap).map(k => { const [y, m] = k.split('-'); return `${m}/${y}`; });
+    const monthValues = Object.values(monthsMap);
 
-    // Atualiza legenda
-    const legend = document.getElementById('chartLegend');
-    legend.innerHTML = '';
-    data.forEach((d, i) => {
+    const lineCtx = document.getElementById('chartLine').getContext('2d');
+    if (chartLine) {
+        chartLine.data.labels = monthLabels;
+        chartLine.data.datasets[0].data = monthValues;
+        chartLine.update();
+    } else {
+        chartLine = new Chart(lineCtx, {
+            type: 'line',
+            data: { labels: monthLabels, datasets: [{ label: 'Resultado', data: monthValues, borderColor: COLORS[1], backgroundColor: COLORS[1] + '33', fill: true, tension: 0.3 }] },
+            options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false } }, maintainAspectRatio: false }
+        });
+    }
+
+    // Atualiza legendas customizadas
+    const total = values.reduce((s, v) => s + v, 0);
+    // Pie legend
+    const pieLegendEl = document.getElementById('chartPieLegend');
+    pieLegendEl.innerHTML = '';
+    // Bar legend (reuse small summary)
+    const barLegendEl = document.getElementById('chartBarLegend');
+    barLegendEl.innerHTML = '';
+    labels.forEach((lab, i) => {
+        const percent = total ? ((values[i] / total) * 100).toFixed(1) : '0.0';
         const item = document.createElement('div');
         item.className = 'legend-item';
-        const percent = ((d.value / total) * 100).toFixed(1);
-        item.innerHTML = `
-            <div class="legend-color" style="background: ${COLORS[i % COLORS.length]}"></div>
-            <span>${d.name}: ${percent}%</span>
-        `;
-        legend.appendChild(item);
+        item.innerHTML = '<div class="legend-color" style="background: ' + colors[i] + '"></div><span>' + lab + ': ' + percent + '%</span>';
+        pieLegendEl.appendChild(item.cloneNode(true));
+        barLegendEl.appendChild(item.cloneNode(true));
+        // line legend left empty (not needed)
     });
 }
 
@@ -315,93 +351,127 @@ function updateUI() {
     const totals = calcTotals();
     const balance = totals.income - totals.expense;
     
+    // Helper to safely set text content
+    const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    };
+    
+    // Helper to safely set placeholder
+    const setPlaceholder = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.placeholder = value;
+    };
+    
+    // Helper to safely set innerHTML
+    const setHTML = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = value;
+    };
+    
     // Atualiza categorias
     updateCategoryOptions();
     
     // Textos
-    document.getElementById('title').textContent = txt.title;
-    document.getElementById('subtitle').textContent = txt.subtitle;
-    document.getElementById('txt-income').textContent = txt.income;
-    document.getElementById('txt-expense').textContent = txt.expense;
-    document.getElementById('txt-balance').textContent = txt.balance;
-    document.getElementById('txt-goal').textContent = txt.goal;
-    document.getElementById('txt-equity').textContent = txt.equity;
-    document.getElementById('txt-stats').textContent = txt.stats;
-    document.getElementById('txt-distribution').textContent = txt.distribution;
-    document.getElementById('txt-add').textContent = txt.add;
-    document.getElementById('txt-import').textContent = txt.import;
-    document.getElementById('txt-txs').textContent = txt.txs;
-    document.getElementById('txt-freq').textContent = txt.freq;
-    document.getElementById('txt-avg').textContent = txt.avg;
-    document.getElementById('txt-total').textContent = txt.total;
-    document.getElementById('th-date').textContent = txt.date;
-    document.getElementById('th-type').textContent = txt.type;
-    document.getElementById('th-category').textContent = txt.category;
-    document.getElementById('th-desc').textContent = txt.desc;
-    document.getElementById('th-value').textContent = txt.value;
-    document.getElementById('no-txs').textContent = txt.noTxs;
-    document.getElementById('no-chart').textContent = txt.noTxs;
-    document.getElementById('form-value').placeholder = txt.value;
-    document.getElementById('form-desc').placeholder = txt.desc;
-    document.getElementById('form-type').innerHTML = `<option value="despesa">${txt.despesa}</option><option value="receita">${txt.receita}</option>`;
+    setText('title', txt.title);
+    setText('subtitle', txt.subtitle);
+    setText('txt-income', txt.income);
+    setText('txt-expense', txt.expense);
+    setText('txt-balance', txt.balance);
+    setText('txt-goal', txt.goal);
+    setText('txt-equity', txt.equity);
+    setText('txt-stats', txt.stats);
+    setText('txt-distribution', txt.distribution);
+    setText('txt-add', txt.add);
+    setText('txt-import', txt.import);
+    setText('txt-txs', txt.txs);
+    setText('txt-freq', txt.freq);
+    setText('txt-avg', txt.avg);
+    setText('txt-total', txt.total);
+    setText('th-date', txt.date);
+    setText('th-type', txt.type);
+    setText('th-category', txt.category);
+    setText('th-desc', txt.desc);
+    setText('th-value', txt.value);
+    setText('no-txs', txt.noTxs);
+    setPlaceholder('form-value', txt.value);
+    setPlaceholder('form-desc', txt.desc);
+    setHTML('form-type', `<option value="despesa">${txt.despesa}</option><option value="receita">${txt.receita}</option>`);
     
     // Valores
-    document.getElementById('val-income').textContent = '$ ' + totals.income.toFixed(2);
-    document.getElementById('val-expense').textContent = '$ ' + totals.expense.toFixed(2);
-    document.getElementById('val-balance').textContent = '$ ' + balance.toFixed(2);
-    document.getElementById('val-balance').className = balance >= 0 ? 'text-blue' : 'text-red';
-    document.getElementById('val-goal').textContent = '$ ' + state.goal.toFixed(2);
-    document.getElementById('val-equity').textContent = '$ ' + state.equity.toFixed(2);
-    document.getElementById('count-txs').textContent = state.txs.length;
+    setText('val-income', '$ ' + totals.income.toFixed(2));
+    setText('val-expense', '$ ' + totals.expense.toFixed(2));
+    setText('val-balance', '$ ' + balance.toFixed(2));
+    setText('val-goal', '$ ' + state.goal.toFixed(2));
+    setText('val-equity', '$ ' + state.equity.toFixed(2));
+    setText('count-txs', state.txs.length.toString());
+    
+    const balEl = document.getElementById('val-balance');
+    if (balEl) balEl.className = balance >= 0 ? 'text-blue' : 'text-red';
     
     // Stats
     const freq = Object.entries(state.txs.reduce((a, t) => { a[t.category] = (a[t.category] || 0) + 1; return a; }, {})).sort((a, b) => b[1] - a[1])[0];
-    document.getElementById('val-freq').textContent = freq ? freq[0] : 'N/A';
+    setText('val-freq', freq ? freq[0] : 'N/A');
     const avg = state.txs.length ? (totals.income + totals.expense) / state.txs.length : 0;
-    document.getElementById('val-avg').textContent = '$ ' + avg.toFixed(2);
-    document.getElementById('val-total').textContent = state.txs.length;
+    setText('val-avg', '$ ' + avg.toFixed(2));
+    setText('val-total', state.txs.length.toString());
     
-    // Gráfico
-    drawPieChart();
+    // Gráficos
+    drawCharts();
     
     // Tabela
     const tbody = document.getElementById('tbody');
-    tbody.innerHTML = '';
-    if (state.txs.length === 0) {
-        document.getElementById('no-txs').classList.remove('hidden');
-        document.getElementById('table').classList.add('hidden');
-    } else {
-        document.getElementById('no-txs').classList.add('hidden');
-        document.getElementById('table').classList.remove('hidden');
-        state.txs.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(tx => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${tx.date}</td>
-                <td><span class="badge ${tx.type === 'receita' ? 'badge-green' : 'badge-red'}">${tx.type === 'receita' ? txt.receita : txt.despesa}</span></td>
-                <td>${tx.category}</td>
-                <td>${tx.description || '-'}</td>
-                <td style="font-weight: bold;" class="${tx.type === 'receita' ? 'text-green' : 'text-red'}">$ ${parseFloat(tx.value).toFixed(2)}</td>
-                <td><button onclick="deleteTx(${tx.id})" style="background: none; border: none; cursor: pointer; font-size: 1.25rem;">🗑️</button></td>
-            `;
-            tbody.appendChild(tr);
-        });
+    if (tbody) {
+        tbody.innerHTML = '';
+        const noTxs = document.getElementById('no-txs');
+        const table = document.getElementById('table');
+        
+        if (state.txs.length === 0) {
+            if (noTxs) noTxs.classList.remove('hidden');
+            if (table) table.classList.add('hidden');
+        } else {
+            if (noTxs) noTxs.classList.add('hidden');
+            if (table) table.classList.remove('hidden');
+            state.txs.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(tx => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${tx.date}</td>
+                    <td><span class="badge ${tx.type === 'receita' ? 'badge-green' : 'badge-red'}">${tx.type === 'receita' ? txt.receita : txt.despesa}</span></td>
+                    <td>${tx.category}</td>
+                    <td>${tx.description || '-'}</td>
+                    <td style="font-weight: bold;" class="${tx.type === 'receita' ? 'text-green' : 'text-red'}">$ ${parseFloat(tx.value).toFixed(2)}</td>
+                    <td><button onclick="deleteTx(${tx.id})" style="background: none; border: none; cursor: pointer; font-size: 1.25rem;">✕</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
     }
     
-    // Theme
-    document.getElementById('body').className = state.dark ? 'bg-dark' : 'bg-light';
+    // Theme (robust): set classes without clobbering other attributes and expose data-theme
+    const body = document.getElementById('body');
+    if (body) {
+        body.classList.remove('bg-dark', 'bg-light');
+        body.classList.add(state.dark ? 'bg-dark' : 'bg-light');
+        body.setAttribute('data-theme', state.dark ? 'dark' : 'light');
+    }
+
     document.querySelectorAll('.card').forEach(c => {
-        if (c.classList.contains('card-light')) c.classList.remove('card-light');
-        if (!state.dark) c.classList.add('card-light');
+        c.classList.toggle('card-light', !state.dark);
     });
     document.querySelectorAll('input, select').forEach(i => {
-        if (i.classList.contains('input-light')) i.classList.remove('input-light');
-        if (!state.dark) i.classList.add('input-light');
+        i.classList.toggle('input-light', !state.dark);
     });
-    if (document.getElementById('table').classList.contains('table-light')) {
-        document.getElementById('table').classList.remove('table-light');
+    const tableEl = document.getElementById('table');
+    if (tableEl) tableEl.classList.toggle('table-light', !state.dark);
+    
+    // Show icon for current theme: moon when dark, sun when light
+    const themeBtn = document.getElementById('theme-btn');
+    if (themeBtn) {
+        themeBtn.textContent = state.dark ? '◐' : '◉';
+        themeBtn.setAttribute('aria-pressed', state.dark ? 'true' : 'false');
     }
-    if (!state.dark) document.getElementById('table').classList.add('table-light');
-    document.getElementById('theme-btn').textContent = state.dark ? '☀️' : '🌙';
+
+    // Toggle chart-box dark class for theme (removed - no longer needed)
 }
 
 function addTx() {
@@ -462,56 +532,58 @@ function exportPDF() {
     const txt = t[state.lang];
     const totals = calcTotals();
     const balance = totals.income - totals.expense;
-    
-    const html = `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Relatório Computabilis</title>
-<style>
-body{font-family:Arial,sans-serif;padding:30px;max-width:1000px;margin:0 auto;background:#fff;color:#000}
-h1{color:#8b5cf6;text-align:center;margin-bottom:10px}
-h2{color:#333;border-bottom:2px solid #8b5cf6;padding-bottom:5px;margin-top:30px}
-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
-th,td{border:1px solid #ddd;padding:10px;text-align:left}
-th{background:#8b5cf6;color:white;font-weight:bold}
-tr:nth-child(even){background:#f9f9f9}
-.summary{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:20px;border-radius:10px;margin:20px 0}
-.summary-item{display:inline-block;width:32%;margin:10px 0;text-align:center}
-.summary-item strong{display:block;font-size:12px;opacity:0.9;margin-bottom:5px}
-.summary-item .value{font-size:24px;font-weight:bold}
-.footer{text-align:center;margin-top:40px;padding-top:20px;border-top:2px solid #eee;color:#999;font-size:12px}
-</style></head><body>
-<h1>💰 Computabilis</h1>
-<p style="text-align:center"><strong>Gerado em:</strong> ${new Date().toLocaleDateString()}</p>
-<div class="summary">
-<h2 style="color:white;border:none;margin-top:0">Resumo Financeiro</h2>
-<div class="summary-item"><strong>${txt.income}</strong><div class="value">$ ${totals.income.toFixed(2)}</div></div>
-<div class="summary-item"><strong>${txt.expense}</strong><div class="value">$ ${totals.expense.toFixed(2)}</div></div>
-<div class="summary-item"><strong>${txt.balance}</strong><div class="value">$ ${balance.toFixed(2)}</div></div>
-</div>
-<h2>${txt.txs} (${state.txs.length})</h2>
-<table><thead><tr>
-<th>${txt.date}</th><th>${txt.type}</th><th>${txt.category}</th><th>${txt.desc}</th><th>${txt.value}</th>
-</tr></thead><tbody>
-${state.txs.sort((a, b) => new Date(b.date) - new Date(a.date)).map(tx => 
-    `<tr>
-    <td>${tx.date}</td>
-    <td><span style="padding:4px 8px;border-radius:4px;font-size:12px;background:${tx.type === 'receita' ? '#d1fae5' : '#fee2e2'};color:${tx.type === 'receita' ? '#065f46' : '#991b1b'}">${tx.type === 'receita' ? txt.receita : txt.despesa}</span></td>
-    <td>${tx.category}</td>
-    <td>${tx.description || '-'}</td>
-    <td style="text-align:right;font-weight:bold;color:${tx.type === 'receita' ? '#059669' : '#dc2626'}">$ ${parseFloat(tx.value).toFixed(2)}</td>
-    </tr>`
-).join('')}
-</tbody></table>
-<div class="footer">
-<p>Gerado por <strong>Computabilis</strong> - Sistema Profissional de Gestão Financeira</p>
-<p><strong>Instruções:</strong> Pressione Ctrl+P (ou Cmd+P no Mac) e escolha "Salvar como PDF"</p>
-</div>
-</body></html>`;
-    
+    // Build HTML without nested template literals to avoid syntax/parser issues
+    const rows = state.txs.sort((a, b) => new Date(b.date) - new Date(a.date)).map(tx => {
+        const badgeBg = tx.type === 'receita' ? '#d1fae5' : '#fee2e2';
+        const badgeColor = tx.type === 'receita' ? '#065f46' : '#991b1b';
+        const valueColor = tx.type === 'receita' ? '#059669' : '#dc2626';
+        return '<tr>' +
+            '<td>' + tx.date + '</td>' +
+            '<td><span style="padding:4px 8px;border-radius:4px;font-size:12px;background:' + badgeBg + ';color:' + badgeColor + '">' + (tx.type === 'receita' ? txt.receita : txt.despesa) + '</span></td>' +
+            '<td>' + (tx.category || '-') + '</td>' +
+            '<td>' + (tx.description || '-') + '</td>' +
+            '<td style="text-align:right;font-weight:bold;color:' + valueColor + '">$ ' + parseFloat(tx.value).toFixed(2) + '</td>' +
+        '</tr>';
+    }).join('');
+
+    const htmlParts = [];
+    htmlParts.push('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relat\u00F3rio Computabilis</title><style>');
+    htmlParts.push('body{font-family:Arial,sans-serif;padding:30px;max-width:1000px;margin:0 auto;background:#fff;color:#000}');
+    htmlParts.push('h1{color:#8b5cf6;text-align:center;margin-bottom:10px}');
+    htmlParts.push('h2{color:#333;border-bottom:2px solid #8b5cf6;padding-bottom:5px;margin-top:30px}');
+    htmlParts.push('table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}');
+    htmlParts.push('th,td{border:1px solid #ddd;padding:10px;text-align:left}');
+    htmlParts.push('th{background:#8b5cf6;color:white;font-weight:bold}');
+    htmlParts.push('tr:nth-child(even){background:#f9f9f9}');
+    htmlParts.push('.summary{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:20px;border-radius:10px;margin:20px 0}');
+    htmlParts.push('.summary-item{display:inline-block;width:32%;margin:10px 0;text-align:center}');
+    htmlParts.push('.summary-item strong{display:block;font-size:12px;opacity:0.9;margin-bottom:5px}');
+    htmlParts.push('.summary-item .value{font-size:24px;font-weight:bold}');
+    htmlParts.push('.footer{text-align:center;margin-top:40px;padding-top:20px;border-top:2px solid #eee;color:#999;font-size:12px}');
+    htmlParts.push('</style></head><body>');
+    htmlParts.push('<h1>◆ Computabilis</h1>');
+    htmlParts.push('<p style="text-align:center"><strong>Gerado em:</strong> ' + new Date().toLocaleDateString() + '</p>');
+    htmlParts.push('<div class="summary">');
+    htmlParts.push('<h2 style="color:white;border:none;margin-top:0">Resumo Financeiro</h2>');
+    htmlParts.push('<div class="summary-item"><strong>' + txt.income + '</strong><div class="value">$ ' + totals.income.toFixed(2) + '</div></div>');
+    htmlParts.push('<div class="summary-item"><strong>' + txt.expense + '</strong><div class="value">$ ' + totals.expense.toFixed(2) + '</div></div>');
+    htmlParts.push('<div class="summary-item"><strong>' + txt.balance + '</strong><div class="value">$ ' + balance.toFixed(2) + '</div></div>');
+    htmlParts.push('</div>');
+    htmlParts.push('<h2>' + txt.txs + ' (' + state.txs.length + ')</h2>');
+    htmlParts.push('<table><thead><tr><th>' + txt.date + '</th><th>' + txt.type + '</th><th>' + txt.category + '</th><th>' + txt.desc + '</th><th>' + txt.value + '</th></tr></thead><tbody>');
+    htmlParts.push(rows);
+    htmlParts.push('</tbody></table>');
+    htmlParts.push('<div class="footer"><p>Gerado por <strong>Computabilis</strong> - Sistema Profissional de Gest\u00E3o Financeira</p>');
+    htmlParts.push('<p><strong>Instru\u00E7\u00F5es:</strong> Pressione Ctrl+P (ou Cmd+P no Mac) e escolha "Salvar como PDF"</p></div>');
+    htmlParts.push('</body></html>');
+
+    const html = htmlParts.join('\n');
+
     const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `computabilis_relatorio_${new Date().toISOString().split('T')[0]}.html`;
+    a.download = 'computabilis_relatorio_' + new Date().toISOString().split('T')[0] + '.html';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -520,14 +592,34 @@ ${state.txs.sort((a, b) => new Date(b.date) - new Date(a.date)).map(tx =>
 }
 
 // Events
-document.getElementById('lang').addEventListener('change', e => { state.lang = e.target.value; updateUI(); });
-document.getElementById('theme-btn').addEventListener('click', () => { state.dark = !state.dark; updateUI(); });
-document.getElementById('btn-add').addEventListener('click', addTx);
-document.getElementById('btn-csv').addEventListener('click', exportCSV);
-document.getElementById('btn-pdf').addEventListener('click', exportPDF);
-
-// Meta e Patrimônio - CORRIGIDO
-document.getElementById('card-goal').addEventListener('click', function(e) {
+setTimeout(() => {
+    const themeBtn = document.getElementById('theme-btn');
+    const addBtn = document.getElementById('btn-add');
+    const csvBtn = document.getElementById('btn-csv');
+    const pdfBtn = document.getElementById('btn-pdf');
+    const langSelect = document.getElementById('lang');
+    const cardGoal = document.getElementById('card-goal');
+    const cardEquity = document.getElementById('card-equity');
+    const fileImport = document.getElementById('file-import');
+    
+    if (langSelect) langSelect.addEventListener('change', e => { 
+        state.lang = e.target.value; 
+        updateUI(); 
+    });
+    
+    if (themeBtn) themeBtn.addEventListener('click', () => { 
+        state.dark = !state.dark; 
+        updateUI(); 
+    });
+    
+    if (addBtn) addBtn.addEventListener('click', () => { 
+        addTx(); 
+    });
+    
+    if (csvBtn) csvBtn.addEventListener('click', exportCSV);
+    if (pdfBtn) pdfBtn.addEventListener('click', exportPDF);
+    
+    if (cardGoal) cardGoal.addEventListener('click', function(e) {
     if (state.editingGoal) return;
     state.editingGoal = true;
     const valEl = document.getElementById('val-goal');
@@ -564,7 +656,7 @@ document.getElementById('card-goal').addEventListener('click', function(e) {
     });
 });
 
-document.getElementById('card-equity').addEventListener('click', function(e) {
+    if (cardEquity) cardEquity.addEventListener('click', function(e) {
     if (state.editingEquity) return;
     state.editingEquity = true;
     const valEl = document.getElementById('val-equity');
@@ -601,33 +693,35 @@ document.getElementById('card-equity').addEventListener('click', function(e) {
     });
 });
 
-document.getElementById('file-import').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-        try {
-            const lines = ev.target.result.split('\n');
-            let imported = 0;
-            for (let i = 1; i < lines.length; i++) {
-                const [date, type, category, value, description] = lines[i].split(',');
-                if (date && type && category && value) {
-                    state.txs.push({ id: Date.now() + i, date: date.trim(), type: type.trim(), category: category.trim(), value: value.trim(), description: description?.trim() || '' });
-                    imported++;
+    if (fileImport) fileImport.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const lines = ev.target.result.split('\n');
+                let imported = 0;
+                for (let i = 1; i < lines.length; i++) {
+                    const [date, type, category, value, description] = lines[i].split(',');
+                    if (date && type && category && value) {
+                        state.txs.push({ id: Date.now() + i, date: date.trim(), type: type.trim(), category: category.trim(), value: value.trim(), description: description?.trim() || '' });
+                        imported++;
+                    }
                 }
+                if (imported) alert(`${imported} ${t[state.lang].txs}`);
+                updateUI();
+            } catch (err) {
+                alert('Erro ao importar');
             }
-            if (imported) alert(`${imported} ${t[state.lang].txs}`);
-            updateUI();
-        } catch (err) {
-            alert('Erro ao importar');
-        }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
-});
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+    });
+    
+    updateUI();
+}, 50);
 
-// Init
-updateUI();
+// PWA - Service Worker
 
 // PWA - Service Worker
 // NOTA: O erro 404 do SW é NORMAL quando testando em claudeusercontent.com
