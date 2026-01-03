@@ -1,0 +1,392 @@
+/* Computabilis - Main Stylesheet */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Dark and Light Modes */
+body.bg-dark {
+    background: #0a0a0a;
+    color: #e0e0e0;
+    min-height: 100vh;
+}
+
+body.bg-light {
+    background: linear-gradient(135deg, #faf5ff 0%, #fce7f3 50%, #dbeafe 100%);
+    color: #1f2937;
+    min-height: 100vh;
+}
+
+/* Container and Grid */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.grid-2 {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Card Styles */
+.card {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    box-shadow: 0 6px 18px rgba(16, 24, 40, 0.35);
+}
+
+body.bg-dark .card {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+}
+
+.card-light {
+    background: #ffffff;
+    border: 1px solid rgba(16, 24, 40, 0.06);
+    color: #111827;
+}
+
+/* Chart Boxes - Removed, now using card directly */
+.chart-canvas-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    margin: 1rem 0;
+}
+
+.chart-canvas-wrap canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Legend Styles */
+.chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0.75rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.12s ease, opacity 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    color: white;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-theme {
+    background: linear-gradient(135deg, #f59e0b, #ec4899);
+    color: white;
+    font-size: 1.25rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.btn-theme:hover {
+    transform: scale(1.1) rotate(20deg);
+}
+
+body.bg-dark .btn-theme {
+    background: #1a1a1a;
+    border: 2px solid #3a3a3a;
+    color: #e0e0e0;
+}
+
+body.bg-dark .btn-theme:hover {
+    background: #242424;
+    border-color: #4a4a4a;
+}
+
+body.bg-light .btn-theme {
+    background: #ffffff;
+    border: 2px solid #e5e7eb;
+    color: #1f2937;
+}
+
+body.bg-light .btn-theme:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+.btn-green {
+    background: #10b981;
+    color: white;
+}
+
+.btn-red {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-blue {
+    background: #3b82f6;
+    color: white;
+}
+
+/* Form Elements */
+input, select {
+    padding: 0.6rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+    color: inherit;
+    width: 100%;
+    font-size: 0.95rem;
+}
+
+body.bg-dark input,
+body.bg-dark select,
+body.bg-dark .edit-input {
+    background: #242424 !important;
+    color: #f0f0f0 !important;
+    border: 1px solid #3a3a3a !important;
+}
+
+.input-light {
+    background: #fff !important;
+    color: #000 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+.input-light[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0);
+}
+
+/* Select Dropdown Styling */
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+                      linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px);
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 2.25rem;
+}
+
+body.bg-dark select {
+    background-color: #242424 !important;
+    color: #fff !important;
+    border-color: #3a3a3a !important;
+}
+
+body.bg-dark option {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 0.5rem;
+}
+
+select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #fff;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-light th, .table-light td {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+th {
+    font-weight: 600;
+    opacity: 0.7;
+    font-size: 0.875rem;
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.badge-green {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.badge-red {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+/* Text Colors */
+.text-green {
+    color: #10b981;
+}
+
+.text-red {
+    color: #ef4444;
+}
+
+.text-blue {
+    color: #3b82f6;
+}
+
+.text-purple {
+    color: #8b5cf6;
+}
+
+.text-yellow {
+    color: #f59e0b;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.emoji {
+    width: 48px;
+    height: 48px;
+    background: #f59e0b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    transition: background 0.3s;
+}
+
+body.bg-dark .emoji {
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    color: white;
+}
+
+body.bg-light .emoji {
+    background: linear-gradient(135deg, #ec4899, #f59e0b);
+    color: white;
+    font-size: 24px;
+}
+
+/* Utilities */
+.clickable {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.clickable:hover {
+    transform: scale(1.05);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.edit-input {
+    background: rgba(139, 92, 246, 0.2) !important;
+    border: 2px solid #8b5cf6 !important;
+}
+
+/* Language Selector */
+#lang {
+    width: auto;
+    padding: 0.5rem;
+}
+
+body.bg-dark #lang {
+    background: #242424;
+    color: #fff;
+    border: 1px solid #3a3a3a;
+}
+
+body.bg-light #lang {
+    background: #fff;
+    color: #111827;
+    border: 1px solid rgba(16, 24, 40, 0.06);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .grid-3, .grid-2 {
+        grid-template-columns: 1fr;
+    }
+    
+    input, select, .btn {
+        font-size: 16px;
+    }
+}
