@@ -7,73 +7,97 @@
   <meta name="theme-color" content="#312e81">
   <title>Computabilis</title>
   <link rel="manifest" href="./manifest.json">
-  <link rel="stylesheet" href="./style.css?v=4.0.1">
+  <link rel="stylesheet" href="./style.css?v=4.1.1">
 </head>
 <body>
   <header class="app-header">
-    <div><p class="eyebrow">Controle financeiro pessoal</p><h1>Computabilis</h1></div>
-    <button id="theme-button" class="button button-secondary button-small" type="button" aria-pressed="false">Tema claro</button>
+    <div><p class="eyebrow" data-i18n="eyebrow">Controle financeiro pessoal</p><h1>Computabilis</h1></div>
+    <div class="header-actions">
+      <label class="language-field"><span class="sr-only" data-i18n="language">Idioma</span><select id="language-select" aria-label="Idioma"><option value="pt-BR">PT</option><option value="en">EN</option></select></label>
+      <button id="theme-button" class="button button-secondary button-small" type="button" aria-pressed="false">Tema claro</button>
+    </div>
   </header>
 
   <main class="container">
     <section class="month-bar" aria-labelledby="month-title">
-      <div><h2 id="month-title">Mês em análise</h2><p>Os totais abaixo consideram apenas o mês escolhido.</p></div>
-      <label><span>Mês</span><input id="selected-month" type="month" required></label>
+      <div><h2 id="month-title" data-i18n="monthTitle">Mês em análise</h2><p data-i18n="monthDescription">Os totais abaixo consideram apenas o mês escolhido.</p></div>
+      <label><span data-i18n="month">Mês</span><input id="selected-month" type="month" required></label>
     </section>
 
     <section class="summary-grid" aria-label="Resumo mensal">
-      <article class="summary-card income"><span>Receitas</span><strong id="income-total">R$ 0,00</strong></article>
-      <article class="summary-card expense"><span>Despesas</span><strong id="expense-total">R$ 0,00</strong></article>
-      <article class="summary-card balance"><span>Saldo</span><strong id="balance-total">R$ 0,00</strong></article>
-      <article class="summary-card budget"><span>Disponível no orçamento</span><strong id="budget-remaining">Não definido</strong></article>
+      <article class="summary-card income"><span data-i18n="income">Receitas</span><strong id="income-total">R$ 0,00</strong></article>
+      <article class="summary-card expense"><span data-i18n="expenses">Despesas</span><strong id="expense-total">R$ 0,00</strong></article>
+      <article class="summary-card balance"><span data-i18n="balance">Saldo</span><strong id="balance-total">R$ 0,00</strong></article>
+      <article class="summary-card budget"><span data-i18n="budgetAvailable">Disponível no orçamento</span><strong id="budget-remaining">Não definido</strong></article>
+    </section>
+
+    <section class="technical-grid" aria-label="Indicadores contábeis">
+      <article class="metric"><span data-i18n="savingsRate">Taxa de economia</span><strong id="savings-rate">—</strong></article>
+      <article class="metric"><span data-i18n="expenseRatio">Comprometimento da renda</span><strong id="expense-ratio">—</strong></article>
+      <article class="metric"><span data-i18n="averageExpense">Despesa média</span><strong id="average-expense">—</strong></article>
+      <article class="metric"><span data-i18n="largestCategory">Maior categoria</span><strong id="largest-category">—</strong></article>
+    </section>
+
+    <section class="charts-grid" aria-label="Análises financeiras">
+      <article class="panel chart-panel">
+        <h2 data-i18n="expenseDistribution">Distribuição das despesas</h2>
+        <p class="muted" data-i18n="expenseDistributionHelp">Participação de cada categoria no mês.</p>
+        <div id="category-chart" class="bar-chart"></div>
+        <p id="category-chart-empty" class="empty-state" data-i18n="noExpenseData">Sem despesas neste mês.</p>
+      </article>
+      <article class="panel chart-panel">
+        <h2 data-i18n="cashFlow">Fluxo líquido</h2>
+        <p class="muted" data-i18n="cashFlowHelp">Receitas menos despesas nos últimos seis meses.</p>
+        <div id="cashflow-chart" class="line-chart" role="img" aria-label="Fluxo líquido dos últimos seis meses"></div>
+      </article>
     </section>
 
     <section class="panel budget-panel" aria-labelledby="budget-title">
-      <div><h2 id="budget-title">Orçamento do mês</h2><p>Defina quanto pode ser gasto no mês selecionado.</p></div>
+      <div><h2 id="budget-title" data-i18n="budgetTitle">Orçamento do mês</h2><p data-i18n="budgetHelp">Defina quanto pode ser gasto no mês selecionado.</p></div>
       <form id="budget-form" class="inline-form">
-        <label><span>Limite de despesas</span><input id="budget-value" type="text" inputmode="decimal" placeholder="Ex.: 2500,00" autocomplete="off"></label>
-        <button class="button button-secondary" type="submit">Salvar orçamento</button>
+        <label><span data-i18n="expenseLimit">Limite de despesas</span><input id="budget-value" type="text" inputmode="decimal" placeholder="Ex.: 2500,00" data-i18n-placeholder="moneyExample" autocomplete="off"></label>
+        <button class="button button-secondary" type="submit" data-i18n="saveBudget">Salvar orçamento</button>
       </form>
       <div class="progress" aria-label="Progresso do orçamento"><span id="budget-progress"></span></div>
       <p id="budget-message" class="muted">Nenhum orçamento definido para este mês.</p>
     </section>
 
     <section class="panel" aria-labelledby="entry-title">
-      <h2 id="entry-title">Novo lançamento</h2>
+      <h2 id="entry-title" data-i18n="newEntry">Novo lançamento</h2>
       <form id="entry-form" novalidate>
         <input id="editing-id" type="hidden">
         <div class="form-grid">
-          <label><span>Data</span><input id="entry-date" type="date" required></label>
-          <label><span>Tipo</span><select id="entry-type" required><option value="expense">Despesa</option><option value="income">Receita</option></select></label>
-          <label><span>Categoria</span><select id="entry-category" required><option value="">Selecione</option><option>Alimentação</option><option>Casa</option><option>Educação</option><option>Lazer</option><option>Renda</option><option>Saúde</option><option>Transporte</option><option>Outros</option></select></label>
-          <label><span>Valor</span><input id="entry-value" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off" required></label>
-          <label class="wide-field"><span>Descrição</span><input id="entry-description" type="text" maxlength="120" placeholder="Ex.: mercado da semana" autocomplete="off"></label>
+          <label><span data-i18n="date">Data</span><input id="entry-date" type="date" required></label>
+          <label><span data-i18n="type">Tipo</span><select id="entry-type" required><option value="expense" data-i18n="expense">Despesa</option><option value="income" data-i18n="incomeSingular">Receita</option></select></label>
+          <label><span data-i18n="category">Categoria</span><select id="entry-category" required><option value="" data-i18n="select">Selecione</option><option value="Alimentação">Alimentação</option><option value="Casa">Casa</option><option value="Educação">Educação</option><option value="Lazer">Lazer</option><option value="Renda">Renda</option><option value="Saúde">Saúde</option><option value="Transporte">Transporte</option><option value="Outros">Outros</option></select></label>
+          <label><span data-i18n="value">Valor</span><input id="entry-value" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off" required></label>
+          <label class="wide-field"><span data-i18n="description">Descrição</span><input id="entry-description" type="text" maxlength="120" placeholder="Ex.: mercado da semana" data-i18n-placeholder="descriptionExample" autocomplete="off"></label>
         </div>
         <p id="form-error" class="form-error" role="alert" hidden></p>
         <div class="button-row">
-          <button id="save-entry" class="button button-primary" type="submit">Adicionar lançamento</button>
-          <button id="cancel-edit" class="button button-secondary" type="button" hidden>Cancelar edição</button>
+          <button id="save-entry" class="button button-primary" type="submit" data-i18n="addEntry">Adicionar lançamento</button>
+          <button id="cancel-edit" class="button button-secondary" type="button" data-i18n="cancelEdit" hidden>Cancelar edição</button>
         </div>
       </form>
     </section>
 
     <section class="panel" aria-labelledby="entries-title">
       <div class="section-heading">
-        <div><h2 id="entries-title">Lançamentos</h2><p id="entry-count" class="muted">Nenhum lançamento neste mês.</p></div>
-        <label class="filter-field"><span>Filtrar</span><select id="type-filter"><option value="all">Todos</option><option value="expense">Despesas</option><option value="income">Receitas</option></select></label>
+        <div><h2 id="entries-title" data-i18n="entries">Lançamentos</h2><p id="entry-count" class="muted">Nenhum lançamento neste mês.</p></div>
+        <label class="filter-field"><span data-i18n="filter">Filtrar</span><select id="type-filter"><option value="all" data-i18n="all">Todos</option><option value="expense" data-i18n="expenses">Despesas</option><option value="income" data-i18n="income">Receitas</option></select></label>
       </div>
       <div id="entry-list" class="entry-list"></div>
-      <p id="empty-state" class="empty-state">Nenhum lançamento para mostrar.</p>
+      <p id="empty-state" class="empty-state" data-i18n="noEntries">Nenhum lançamento para mostrar.</p>
     </section>
 
     <section class="panel" aria-labelledby="backup-title">
-      <h2 id="backup-title">Backup e relatório</h2>
-      <p class="muted">Os dados ficam somente neste navegador. Guarde um backup antes de trocar ou limpar o celular.</p>
+      <h2 id="backup-title" data-i18n="backupTitle">Backup e relatório</h2>
+      <p class="muted" data-i18n="backupHelp">Os dados ficam somente neste navegador. Guarde um backup antes de trocar ou limpar o celular.</p>
       <div class="button-row actions-grid">
-        <button id="export-backup" class="button button-secondary" type="button">Baixar backup</button>
-        <label class="button button-secondary file-button">Restaurar backup<input id="import-backup" type="file" accept="application/json,.json"></label>
-        <button id="export-csv" class="button button-secondary" type="button">Exportar mês em CSV</button>
-        <button id="print-report" class="button button-secondary" type="button">Imprimir relatório</button>
+        <button id="export-backup" class="button button-secondary" type="button" data-i18n="downloadBackup">Baixar backup</button>
+        <label class="button button-secondary file-button"><span data-i18n="restoreBackup">Restaurar backup</span><input id="import-backup" type="file" accept="application/json,.json"></label>
+        <button id="export-csv" class="button button-secondary" type="button" data-i18n="exportCsv">Exportar mês em CSV</button>
+        <button id="print-report" class="button button-secondary" type="button" data-i18n="printReport">Imprimir relatório</button>
       </div>
       <p id="backup-status" class="status" role="status" aria-live="polite"></p>
     </section>
@@ -81,12 +105,12 @@
 
   <dialog id="delete-dialog">
     <form method="dialog">
-      <h2>Excluir lançamento?</h2><p>Esta ação não pode ser desfeita.</p>
-      <div class="button-row"><button class="button button-secondary" value="cancel">Cancelar</button><button class="button button-danger" value="confirm">Excluir</button></div>
+      <h2 data-i18n="deleteQuestion">Excluir lançamento?</h2><p data-i18n="deleteWarning">Esta ação não pode ser desfeita.</p>
+      <div class="button-row"><button class="button button-secondary" value="cancel" data-i18n="cancel">Cancelar</button><button class="button button-danger" value="confirm" data-i18n="delete">Excluir</button></div>
     </form>
   </dialog>
 
-  <footer>Computabilis funciona sem conta e mantém os dados no aparelho.</footer>
-  <script type="module" src="./app.js?v=4.0.1"></script>
+  <footer data-i18n="footer">Computabilis funciona sem conta e mantém os dados no aparelho.</footer>
+  <script type="module" src="./app.js?v=4.1.1"></script>
 </body>
 </html>

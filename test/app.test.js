@@ -17,6 +17,7 @@ test('calculates income and expenses without floating-point money', () => {
   ]);
   assert.deepEqual(totals, { income: 300050, expense: 3000 });
   assert.match(formatMoney(totals.expense), /30,00/);
+  assert.match(formatMoney(totals.expense, 'en'), /30\.00/);
 });
 
 test('filters entries by month and rejects malformed backups', () => {

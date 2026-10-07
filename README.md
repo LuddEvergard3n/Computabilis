@@ -17,6 +17,8 @@ That constraint defines the project. Computabilis favors a short monthly workflo
 ## Features
 
 - Monthly income, expense, balance, and remaining-budget totals.
+- Accounting-oriented indicators for savings rate, income commitment, average expense, and largest expense category.
+- Expense distribution and six-month net cash-flow charts rendered without a charting dependency.
 - A separate expense budget for each month.
 - Add, edit, filter, and delete entries.
 - Brazilian real formatting with calculations stored as integer cents.
@@ -25,6 +27,7 @@ That constraint defines the project. Computabilis favors a short monthly workflo
 - Safe monthly CSV export.
 - Printable monthly report.
 - Light and dark themes.
+- Portuguese and English interface modes for everyday language practice.
 - Responsive controls designed for phone use.
 - Basic offline cache through a service worker.
 
@@ -77,6 +80,7 @@ Computabilis/
 - User-provided text is rendered with DOM text nodes rather than HTML injection.
 - JSON is the canonical backup format; CSV is an export format for spreadsheets.
 - No framework, database, authentication layer, analytics, or cloud service is required.
+- Charts use native DOM and SVG elements, keeping the application small and available offline.
 
 ## Current limits
 

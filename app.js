@@ -2,6 +2,18 @@ const STORAGE_KEY = 'computabilis:v1';
 const MAX_CENTS = 999_999_999_99;
 const CATEGORIES = ['Alimentação', 'Casa', 'Educação', 'Lazer', 'Renda', 'Saúde', 'Transporte', 'Outros'];
 const TYPES = ['expense', 'income'];
+const CATEGORY_LABELS = {
+  'pt-BR': CATEGORIES,
+  en: ['Food', 'Home', 'Education', 'Leisure', 'Income', 'Health', 'Transport', 'Other']
+};
+const TRANSLATIONS = {
+  'pt-BR': {
+    eyebrow: 'Controle financeiro pessoal', language: 'Idioma', monthTitle: 'Mês em análise', monthDescription: 'Os totais abaixo consideram apenas o mês escolhido.', month: 'Mês', income: 'Receitas', expenses: 'Despesas', balance: 'Saldo', budgetAvailable: 'Disponível no orçamento', savingsRate: 'Taxa de economia', expenseRatio: 'Comprometimento da renda', averageExpense: 'Despesa média', largestCategory: 'Maior categoria', expenseDistribution: 'Distribuição das despesas', expenseDistributionHelp: 'Participação de cada categoria no mês.', noExpenseData: 'Sem despesas neste mês.', cashFlow: 'Fluxo líquido', cashFlowHelp: 'Receitas menos despesas nos últimos seis meses.', budgetTitle: 'Orçamento do mês', budgetHelp: 'Defina quanto pode ser gasto no mês selecionado.', expenseLimit: 'Limite de despesas', moneyExample: 'Ex.: 2500,00', saveBudget: 'Salvar orçamento', newEntry: 'Novo lançamento', date: 'Data', type: 'Tipo', expense: 'Despesa', incomeSingular: 'Receita', category: 'Categoria', select: 'Selecione', value: 'Valor', description: 'Descrição', descriptionExample: 'Ex.: mercado da semana', addEntry: 'Adicionar lançamento', saveChange: 'Salvar alteração', cancelEdit: 'Cancelar edição', entries: 'Lançamentos', filter: 'Filtrar', all: 'Todos', noEntries: 'Nenhum lançamento para mostrar.', backupTitle: 'Backup e relatório', backupHelp: 'Os dados ficam somente neste navegador. Guarde um backup antes de trocar ou limpar o celular.', downloadBackup: 'Baixar backup', restoreBackup: 'Restaurar backup', exportCsv: 'Exportar mês em CSV', printReport: 'Imprimir relatório', deleteQuestion: 'Excluir lançamento?', deleteWarning: 'Esta ação não pode ser desfeita.', cancel: 'Cancelar', delete: 'Excluir', footer: 'Computabilis funciona sem conta e mantém os dados no aparelho.', themeLight: 'Tema claro', themeDark: 'Tema escuro', notDefined: 'Não definido', noBudget: 'Nenhum orçamento definido para este mês.', availableOf: (remaining, budget) => `${remaining} disponíveis de ${budget}.`, budgetExceeded: (value) => `Orçamento excedido em ${value}.`, entryCount: (count) => count === 1 ? '1 lançamento neste mês.' : `${count} lançamentos neste mês.`, edit: 'Editar', chooseCategory: 'Escolha uma categoria.', invalidValue: 'Informe um valor válido, maior que zero, com no máximo duas casas decimais.', invalidDate: 'Escolha uma data dentro do mês em análise.', invalidBudget: 'Informe um orçamento válido.', deletedQuestion: 'Excluir este lançamento?', backupDownloaded: 'Backup baixado. Guarde o arquivo em um local seguro.', backupRestored: 'Backup restaurado com sucesso.', backupFailed: 'Não foi possível restaurar o backup.', noCsvData: 'Não há lançamentos neste mês para exportar.', csvDownloaded: 'CSV do mês baixado.'
+  },
+  en: {
+    eyebrow: 'Personal finance control', language: 'Language', monthTitle: 'Month under review', monthDescription: 'The totals below include only the selected month.', month: 'Month', income: 'Income', expenses: 'Expenses', balance: 'Balance', budgetAvailable: 'Available budget', savingsRate: 'Savings rate', expenseRatio: 'Income committed', averageExpense: 'Average expense', largestCategory: 'Largest category', expenseDistribution: 'Expense distribution', expenseDistributionHelp: 'Share of each category during the month.', noExpenseData: 'No expenses this month.', cashFlow: 'Net cash flow', cashFlowHelp: 'Income minus expenses over the last six months.', budgetTitle: 'Monthly budget', budgetHelp: 'Set the spending limit for the selected month.', expenseLimit: 'Expense limit', moneyExample: 'Example: 2500.00', saveBudget: 'Save budget', newEntry: 'New entry', date: 'Date', type: 'Type', expense: 'Expense', incomeSingular: 'Income', category: 'Category', select: 'Select', value: 'Amount', description: 'Description', descriptionExample: 'Example: weekly groceries', addEntry: 'Add entry', saveChange: 'Save changes', cancelEdit: 'Cancel editing', entries: 'Entries', filter: 'Filter', all: 'All', noEntries: 'No entries to display.', backupTitle: 'Backup and report', backupHelp: 'Data stays in this browser. Save a backup before replacing or clearing the phone.', downloadBackup: 'Download backup', restoreBackup: 'Restore backup', exportCsv: 'Export month as CSV', printReport: 'Print report', deleteQuestion: 'Delete entry?', deleteWarning: 'This action cannot be undone.', cancel: 'Cancel', delete: 'Delete', footer: 'Computabilis works without an account and keeps data on the device.', themeLight: 'Light theme', themeDark: 'Dark theme', notDefined: 'Not set', noBudget: 'No budget set for this month.', availableOf: (remaining, budget) => `${remaining} available from ${budget}.`, budgetExceeded: (value) => `Budget exceeded by ${value}.`, entryCount: (count) => count === 1 ? '1 entry this month.' : `${count} entries this month.`, edit: 'Edit', chooseCategory: 'Choose a category.', invalidValue: 'Enter a valid amount greater than zero with no more than two decimal places.', invalidDate: 'Choose a date within the selected month.', invalidBudget: 'Enter a valid budget.', deletedQuestion: 'Delete this entry?', backupDownloaded: 'Backup downloaded. Keep the file somewhere safe.', backupRestored: 'Backup restored successfully.', backupFailed: 'The backup could not be restored.', noCsvData: 'There are no entries to export this month.', csvDownloaded: 'Monthly CSV downloaded.'
+  }
+};
 
 export function parseMoney(value) {
   if (typeof value !== 'string') return null;
@@ -13,8 +25,8 @@ export function parseMoney(value) {
   return Number.isSafeInteger(cents) && cents > 0 && cents <= MAX_CENTS ? cents : null;
 }
 
-export function formatMoney(cents) {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cents / 100);
+export function formatMoney(cents, locale = 'pt-BR') {
+  return new Intl.NumberFormat(locale, { style: 'currency', currency: 'BRL' }).format(cents / 100);
 }
 
 export function calculateTotals(entries) {
@@ -51,7 +63,7 @@ function localDate() {
 }
 
 function emptyState() {
-  return { version: 1, entries: [], budgets: {}, theme: 'light' };
+  return { version: 1, entries: [], budgets: {}, theme: 'light', lang: 'pt-BR' };
 }
 
 function sanitizeState(candidate) {
@@ -64,7 +76,7 @@ function sanitizeState(candidate) {
       if (/^\d{4}-\d{2}$/.test(month) && Number.isSafeInteger(cents) && cents > 0 && cents <= MAX_CENTS) budgets[month] = cents;
     }
   }
-  return { version: 1, entries, budgets, theme: candidate.theme === 'dark' ? 'dark' : 'light' };
+  return { version: 1, entries, budgets, theme: candidate.theme === 'dark' ? 'dark' : 'light', lang: candidate.lang === 'en' ? 'en' : 'pt-BR' };
 }
 
 function loadState() {
@@ -88,22 +100,29 @@ function saveState() {
 }
 
 function setText(id, value) { byId(id).textContent = value; }
+function tr(key) { return TRANSLATIONS[state.lang][key]; }
+function money(cents) { return formatMoney(cents, state.lang); }
+function categoryLabel(category) {
+  const index = CATEGORIES.indexOf(category);
+  return index >= 0 ? CATEGORY_LABELS[state.lang][index] : category;
+}
 
 function monthEntries() {
   return entriesForMonth(state.entries, selectedMonth);
 }
 
 function renderSummary() {
-  const totals = calculateTotals(monthEntries());
+  const entries = monthEntries();
+  const totals = calculateTotals(entries);
   const balance = totals.income - totals.expense;
-  setText('income-total', formatMoney(totals.income));
-  setText('expense-total', formatMoney(totals.expense));
-  setText('balance-total', formatMoney(balance));
+  setText('income-total', money(totals.income));
+  setText('expense-total', money(totals.expense));
+  setText('balance-total', money(balance));
   byId('balance-total').classList.toggle('negative', balance < 0);
 
   const budget = state.budgets[selectedMonth];
   const remaining = budget ? budget - totals.expense : null;
-  setText('budget-remaining', budget ? formatMoney(remaining) : 'Não definido');
+  setText('budget-remaining', budget ? money(remaining) : tr('notDefined'));
   byId('budget-remaining').classList.toggle('negative', remaining !== null && remaining < 0);
   byId('budget-value').value = budget ? (budget / 100).toFixed(2).replace('.', ',') : '';
 
@@ -111,9 +130,20 @@ function renderSummary() {
   const percentage = budget ? Math.min((totals.expense / budget) * 100, 100) : 0;
   progress.style.width = `${percentage}%`;
   progress.classList.toggle('over', Boolean(budget && totals.expense > budget));
-  if (!budget) setText('budget-message', 'Nenhum orçamento definido para este mês.');
-  else if (remaining >= 0) setText('budget-message', `${formatMoney(remaining)} disponíveis de ${formatMoney(budget)}.`);
-  else setText('budget-message', `Orçamento excedido em ${formatMoney(Math.abs(remaining))}.`);
+  if (!budget) setText('budget-message', tr('noBudget'));
+  else if (remaining >= 0) setText('budget-message', tr('availableOf')(money(remaining), money(budget)));
+  else setText('budget-message', tr('budgetExceeded')(money(Math.abs(remaining))));
+
+  const expenses = entries.filter((entry) => entry.type === 'expense');
+  const categoryTotals = expenses.reduce((result, entry) => {
+    result[entry.category] = (result[entry.category] || 0) + entry.cents;
+    return result;
+  }, {});
+  const largest = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1])[0];
+  setText('savings-rate', totals.income ? `${((balance / totals.income) * 100).toFixed(1)}%` : '—');
+  setText('expense-ratio', totals.income ? `${((totals.expense / totals.income) * 100).toFixed(1)}%` : '—');
+  setText('average-expense', expenses.length ? money(Math.round(totals.expense / expenses.length)) : '—');
+  setText('largest-category', largest ? categoryLabel(largest[0]) : '—');
 }
 
 function makeButton(label, className, handler) {
@@ -125,6 +155,91 @@ function makeButton(label, className, handler) {
   return button;
 }
 
+function renderCategoryChart() {
+  const expenses = monthEntries().filter((entry) => entry.type === 'expense');
+  const totals = expenses.reduce((result, entry) => {
+    result[entry.category] = (result[entry.category] || 0) + entry.cents;
+    return result;
+  }, {});
+  const data = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+  const total = data.reduce((sum, [, cents]) => sum + cents, 0);
+  const chart = byId('category-chart');
+  chart.replaceChildren();
+  byId('category-chart-empty').hidden = data.length > 0;
+  chart.hidden = data.length === 0;
+  for (const [category, cents] of data) {
+    const percentage = total ? (cents / total) * 100 : 0;
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    const label = document.createElement('span');
+    label.className = 'bar-label';
+    label.textContent = categoryLabel(category);
+    const track = document.createElement('span');
+    track.className = 'bar-track';
+    const fill = document.createElement('span');
+    fill.className = 'bar-fill';
+    fill.style.width = `${percentage}%`;
+    track.append(fill);
+    const value = document.createElement('span');
+    value.className = 'bar-value';
+    value.textContent = `${percentage.toFixed(1)}%`;
+    row.append(label, track, value);
+    chart.append(row);
+  }
+}
+
+function shiftMonth(month, offset) {
+  const [year, monthNumber] = month.split('-').map(Number);
+  const date = new Date(year, monthNumber - 1 + offset, 1);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function svgElement(name, attributes = {}) {
+  const element = document.createElementNS('http://www.w3.org/2000/svg', name);
+  for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, value);
+  return element;
+}
+
+function renderCashflowChart() {
+  const months = Array.from({ length: 6 }, (_, index) => shiftMonth(selectedMonth, index - 5));
+  const values = months.map((month) => {
+    const totals = calculateTotals(entriesForMonth(state.entries, month));
+    return totals.income - totals.expense;
+  });
+  const width = 420;
+  const height = 190;
+  const margin = { top: 16, right: 12, bottom: 32, left: 12 };
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+  const minimum = Math.min(0, ...values);
+  const maximum = Math.max(0, ...values);
+  const range = maximum - minimum || 1;
+  const x = (index) => margin.left + (plotWidth * index) / (months.length - 1);
+  const y = (value) => margin.top + ((maximum - value) / range) * plotHeight;
+  const zeroY = y(0);
+  const points = values.map((value, index) => `${x(index)},${y(value)}`).join(' ');
+  const container = byId('cashflow-chart');
+  container.replaceChildren();
+  const svg = svgElement('svg', { viewBox: `0 0 ${width} ${height}`, 'aria-hidden': 'true' });
+  svg.append(svgElement('line', { x1: margin.left, y1: zeroY, x2: width - margin.right, y2: zeroY, class: 'chart-zero' }));
+  svg.append(svgElement('polygon', { points: `${margin.left},${zeroY} ${points} ${width - margin.right},${zeroY}`, class: 'chart-area' }));
+  svg.append(svgElement('polyline', { points, class: 'chart-line' }));
+  months.forEach((month, index) => {
+    svg.append(svgElement('circle', { cx: x(index), cy: y(values[index]), r: 4, class: 'chart-point' }));
+    const label = svgElement('text', { x: x(index), y: height - 9, class: 'chart-label' });
+    const [year, monthNumber] = month.split('-').map(Number);
+    label.textContent = new Intl.DateTimeFormat(state.lang, { month: 'short' }).format(new Date(year, monthNumber - 1, 1)).replace('.', '');
+    svg.append(label);
+  });
+  container.setAttribute('aria-label', `${tr('cashFlow')}: ${values.map((value, index) => `${months[index]} ${money(value)}`).join(', ')}`);
+  container.append(svg);
+}
+
+function renderCharts() {
+  renderCategoryChart();
+  renderCashflowChart();
+}
+
 function renderEntries() {
   const filter = byId('type-filter').value;
   const entries = monthEntries()
@@ -134,7 +249,7 @@ function renderEntries() {
   list.replaceChildren();
   byId('empty-state').hidden = entries.length > 0;
   const totalInMonth = monthEntries().length;
-  setText('entry-count', totalInMonth === 1 ? '1 lançamento neste mês.' : `${totalInMonth} lançamentos neste mês.`);
+  setText('entry-count', tr('entryCount')(totalInMonth));
 
   for (const entry of entries) {
     const card = document.createElement('article');
@@ -143,16 +258,16 @@ function renderEntries() {
     const title = document.createElement('h3');
     title.textContent = entry.description || entry.category;
     const metadata = document.createElement('p');
-    metadata.textContent = `${entry.date.split('-').reverse().join('/')} · ${entry.category}`;
+    metadata.textContent = `${entry.date.split('-').reverse().join('/')} · ${categoryLabel(entry.category)}`;
     details.append(title, metadata);
     const value = document.createElement('div');
     value.className = `entry-value ${entry.type}`;
-    value.textContent = `${entry.type === 'expense' ? '−' : '+'} ${formatMoney(entry.cents)}`;
+    value.textContent = `${entry.type === 'expense' ? '−' : '+'} ${money(entry.cents)}`;
     const actions = document.createElement('div');
     actions.className = 'entry-actions';
     actions.append(
-      makeButton('Editar', 'button button-secondary', () => startEditing(entry.id)),
-      makeButton('Excluir', 'button button-secondary', () => requestDelete(entry.id))
+      makeButton(tr('edit'), 'button button-secondary', () => startEditing(entry.id)),
+      makeButton(tr('delete'), 'button button-secondary', () => requestDelete(entry.id))
     );
     card.append(details, value, actions);
     list.append(card);
@@ -161,6 +276,7 @@ function renderEntries() {
 
 function render() {
   renderSummary();
+  renderCharts();
   renderEntries();
 }
 
@@ -168,7 +284,7 @@ function resetForm() {
   byId('entry-form').reset();
   byId('editing-id').value = '';
   byId('entry-date').value = selectedMonth === localDate().slice(0, 7) ? localDate() : `${selectedMonth}-01`;
-  byId('save-entry').textContent = 'Adicionar lançamento';
+  byId('save-entry').textContent = tr('addEntry');
   byId('cancel-edit').hidden = true;
   byId('form-error').hidden = true;
 }
@@ -189,9 +305,9 @@ function saveEntry(event) {
     cents,
     description: byId('entry-description').value.trim()
   };
-  if (!entry.date || !entry.date.startsWith(`${selectedMonth}-`)) return showFormError('Escolha uma data dentro do mês em análise.');
-  if (!CATEGORIES.includes(entry.category)) return showFormError('Escolha uma categoria.');
-  if (!cents) return showFormError('Informe um valor válido, maior que zero, com no máximo duas casas decimais.');
+  if (!entry.date || !entry.date.startsWith(`${selectedMonth}-`)) return showFormError(tr('invalidDate'));
+  if (!CATEGORIES.includes(entry.category)) return showFormError(tr('chooseCategory'));
+  if (!cents) return showFormError(tr('invalidValue'));
   const index = state.entries.findIndex((item) => item.id === entry.id);
   if (index >= 0) state.entries[index] = entry;
   else state.entries.push(entry);
@@ -209,7 +325,7 @@ function startEditing(id) {
   byId('entry-category').value = entry.category;
   byId('entry-value').value = (entry.cents / 100).toFixed(2).replace('.', ',');
   byId('entry-description').value = entry.description;
-  byId('save-entry').textContent = 'Salvar alteração';
+  byId('save-entry').textContent = tr('saveChange');
   byId('cancel-edit').hidden = false;
   byId('entry-title').scrollIntoView({ behavior: 'smooth' });
 }
@@ -218,7 +334,7 @@ function requestDelete(id) {
   pendingDeleteId = id;
   const dialog = byId('delete-dialog');
   if (typeof dialog.showModal === 'function') dialog.showModal();
-  else if (window.confirm('Excluir este lançamento?')) deletePendingEntry();
+  else if (window.confirm(tr('deletedQuestion'))) deletePendingEntry();
 }
 
 function deletePendingEntry() {
@@ -236,7 +352,7 @@ function saveBudget(event) {
   else {
     const cents = parseMoney(raw);
     if (!cents) {
-      byId('budget-value').setCustomValidity('Informe um orçamento válido.');
+      byId('budget-value').setCustomValidity(tr('invalidBudget'));
       byId('budget-value').reportValidity();
       return;
     }
@@ -258,7 +374,7 @@ function download(name, content, type) {
 
 function exportBackup() {
   download(`computabilis-backup-${localDate()}.json`, JSON.stringify(state, null, 2), 'application/json');
-  setText('backup-status', 'Backup baixado. Guarde o arquivo em um local seguro.');
+  setText('backup-status', tr('backupDownloaded'));
 }
 
 async function importBackup(event) {
@@ -268,12 +384,12 @@ async function importBackup(event) {
     const imported = sanitizeState(JSON.parse(await file.text()));
     state = imported;
     saveState();
-    applyTheme();
+    applyLanguage();
     resetForm();
     render();
-    setText('backup-status', 'Backup restaurado com sucesso.');
+    setText('backup-status', tr('backupRestored'));
   } catch (error) {
-    setText('backup-status', error.message || 'Não foi possível restaurar o backup.');
+    setText('backup-status', error.message || tr('backupFailed'));
   } finally {
     event.target.value = '';
   }
@@ -287,18 +403,35 @@ function csvCell(value) {
 
 function exportCsv() {
   const entries = monthEntries().sort((a, b) => a.date.localeCompare(b.date));
-  if (!entries.length) return setText('backup-status', 'Não há lançamentos neste mês para exportar.');
-  const rows = [['Data', 'Tipo', 'Categoria', 'Descrição', 'Valor'], ...entries.map((entry) => [
-    entry.date, entry.type === 'income' ? 'Receita' : 'Despesa', entry.category, entry.description, (entry.cents / 100).toFixed(2).replace('.', ',')
+  if (!entries.length) return setText('backup-status', tr('noCsvData'));
+  const header = state.lang === 'en' ? ['Date', 'Type', 'Category', 'Description', 'Amount'] : ['Data', 'Tipo', 'Categoria', 'Descrição', 'Valor'];
+  const rows = [header, ...entries.map((entry) => [
+    entry.date, entry.type === 'income' ? tr('incomeSingular') : tr('expense'), categoryLabel(entry.category), entry.description, (entry.cents / 100).toFixed(2).replace('.', ',')
   ])];
   download(`computabilis-${selectedMonth}.csv`, `\uFEFF${rows.map((row) => row.map(csvCell).join(';')).join('\r\n')}`, 'text/csv;charset=utf-8');
-  setText('backup-status', 'CSV do mês baixado.');
+  setText('backup-status', tr('csvDownloaded'));
+}
+
+function applyLanguage() {
+  document.documentElement.lang = state.lang;
+  byId('language-select').value = state.lang;
+  document.querySelectorAll('[data-i18n]').forEach((element) => {
+    const value = tr(element.dataset.i18n);
+    if (typeof value === 'string') element.textContent = value;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((element) => {
+    element.placeholder = tr(element.dataset.i18nPlaceholder);
+  });
+  const categoryOptions = [...byId('entry-category').options].slice(1);
+  categoryOptions.forEach((option, index) => { option.textContent = CATEGORY_LABELS[state.lang][index]; });
+  byId('save-entry').textContent = byId('editing-id').value ? tr('saveChange') : tr('addEntry');
+  applyTheme();
 }
 
 function applyTheme() {
   document.documentElement.dataset.theme = state.theme;
   const dark = state.theme === 'dark';
-  byId('theme-button').textContent = dark ? 'Tema claro' : 'Tema escuro';
+  byId('theme-button').textContent = dark ? tr('themeLight') : tr('themeDark');
   byId('theme-button').setAttribute('aria-pressed', String(dark));
 }
 
@@ -311,7 +444,7 @@ function toggleTheme() {
 function init() {
   state = loadState();
   byId('selected-month').value = selectedMonth;
-  applyTheme();
+  applyLanguage();
   resetForm();
   render();
   byId('entry-form').addEventListener('submit', saveEntry);
@@ -333,6 +466,12 @@ function init() {
   byId('export-csv').addEventListener('click', exportCsv);
   byId('print-report').addEventListener('click', () => window.print());
   byId('theme-button').addEventListener('click', toggleTheme);
+  byId('language-select').addEventListener('change', (event) => {
+    state.lang = event.target.value === 'en' ? 'en' : 'pt-BR';
+    saveState();
+    applyLanguage();
+    render();
+  });
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch((error) => console.error('Falha ao ativar o modo offline.', error));
 }
 
