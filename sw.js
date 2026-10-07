@@ -1,9 +1,10 @@
-const CACHE_VERSION = '3.0.0';
+const CACHE_VERSION = '4.0.1';
 const CACHE_NAME = `computabilis-${CACHE_VERSION}`;
 const urlsToCache = [
   './',
   './index.html',
-  './style.css',
+  './app.js?v=4.0.1',
+  './style.css?v=4.0.1',
   './manifest.json'
 ];
 
